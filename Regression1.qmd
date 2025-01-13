@@ -29,6 +29,7 @@ rs = RandomState(MT19937(SeedSequence(1)))
 Often you will collect data by taking repeated measurements of a thing, which we will call $\boldsymbol{y}$. With each measurement, you also measure another thing, or take notes about the situation occurring during the measurement, which we will call $\boldsymbol{x}$. Here $\boldsymbol{x}$ and $\boldsymbol{y}$ are vectors each of length $N$, the number of measurements. We will think of $\boldsymbol{x}$ as the independent variable, which is affecting the state of $\boldsymbol{y}$. $\boldsymbol{x}$ can be under our control or not. $\boldsymbol{y}$ is referred to as the dependent variable, because its state depends on $\boldsymbol{x}$.
 
 Note: We will be doing some linear algebra in these lectures, so to keep things clear about the dimensionality of the variables we are working with, we will adopt the following convention: 
+
 1. Scalars will be represented by unbolded letters (e.g. $a$, $b$, $N$) 
 2. Vectors will be bolded lowercase letters (e.g. $\boldsymbol{a}$, $\boldsymbol{b}$, $\boldsymbol{n}$) 
 3. Matrices will be bolded uppercase letters (e.g. $\boldsymbol{X}$, $\boldsymbol{Y}$, $\boldsymbol{N}$)
