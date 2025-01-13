@@ -28,11 +28,11 @@ rs = RandomState(MT19937(SeedSequence(1)))
 
 Often you will collect data by taking repeated measurements of a thing, which we will call $\boldsymbol{y}$. With each measurement, you also measure another thing, or take notes about the situation occurring during the measurement, which we will call $\boldsymbol{x}$. Here $\boldsymbol{x}$ and $\boldsymbol{y}$ are vectors each of length $N$, the number of measurements. We will think of $\boldsymbol{x}$ as the independent variable, which is affecting the state of $\boldsymbol{y}$. $\boldsymbol{x}$ can be under our control or not. $\boldsymbol{y}$ is referred to as the dependent variable, because its state depends on $\boldsymbol{x}$.
 
-Note: We will be doing some linear algebra in these lectures, so to keep things clear about the dimensionality of the variables we are working with, we will adopt the following convention: 
+Note: We will be doing some linear algebra in these lectures, so to keep things clear about the dimensionality of the variables we are working with, we will adopt the following convention:
 
-1. Scalars will be represented by unbolded letters (e.g. $a$, $b$, $N$) 
-2. Vectors will be bolded lowercase letters (e.g. $\boldsymbol{a}$, $\boldsymbol{b}$, $\boldsymbol{n}$) 
-3. Matrices will be bolded uppercase letters (e.g. $\boldsymbol{X}$, $\boldsymbol{Y}$, $\boldsymbol{N}$)
+1.  Scalars will be represented by unbolded letters (e.g. $a$, $b$, $N$)
+2.  Vectors will be bolded lowercase letters (e.g. $\boldsymbol{a}$, $\boldsymbol{b}$, $\boldsymbol{n}$)
+3.  Matrices will be bolded uppercase letters (e.g. $\boldsymbol{X}$, $\boldsymbol{Y}$, $\boldsymbol{N}$)
 
 If we want to refer to a specific item in a vector, we will use a single subscript, e.g. $\boldsymbol{x}_1$, $\boldsymbol{x}_2$, ... $\boldsymbol{x}_i$. For a matrix, we use two subscripts, with the first referring to the row index, and the second to the column index, e.g. $\boldsymbol{X}_{1,1}$, $\boldsymbol{X}_{2,3}$, $\boldsymbol{X}_{i,j}$.
 
@@ -516,6 +516,7 @@ Again, we find that the fitted beta coefficients match those we obtained with ou
 ## Constructing a design matrix
 
 ### Continuous factor
+
 Now that we can fit a model with a simple function, we will explore how to design our $\boldsymbol{X}$ matrix to model different kinds of experimental situations. Recall that the $\boldsymbol{X}$ matrix is a matrix of size $N \times (p+1)$, where $N$ is the number of observations and $p$ is the number of factors. The first column of the matrix is a column of ones, which represents the intercept. The intercept can be thought of as capturing the mean value of the dependent variable when all the factors are zero. The remaining columns are the factors that affect the dependent variable. In the example data we generated above, the factors were continuous variables. That means they were real numbers that could take on any value. For single regression there was only one factor, while for multiple regression we included three factors. Something I find helpful when thinking about regression problems is to visualize the design matrix. This can help you understand how the factors are affecting the dependent variable. Let's visualize the design matrix for some of the data we generated above.
 
 ```{python}
@@ -544,6 +545,7 @@ plot_dmat(dmat)
 Each row is an observation and each column a factor. The first column is the intercept and all the entries in it have the value of 1. The subsequent columns are the continuously valued independent variables we generated randomly. You can see the range of blue to red is continuous in the last three columns. I find that a color map that sets 0 to white and had all positive values as red and negative values as blue helps see the relationships between the factors.
 
 ### Ordinal categorical
+
 But your independent variables do not need to be continuous. Instead they could be categorical. Categorical variables take on a limited set of values, denoting either states or values (often integers). For instance, a categorical variable could be the amount of reward payout given in a task, with values ranging from 0 to 3. When a categorical variable is composed of numerically ordered items, such as amount of reward, we refer to it as *ordinal*. We could simulate a categorical variable for reward payout by adding another column to our current design matrix that randomly chooses from those values for each observation.
 
 ```{python}
@@ -557,6 +559,7 @@ plot_dmat(dmat)
 With this plot it is obvious that column 4 is a categorical variable. The values are discrete and there is no continuous gradient between them. Moreover, all of its values are positive, since no blue is visible.
 
 ### Binary/dummy categorical
+
 Specifying a categorical variable as an integer is fine if we think that the relationship between the dependent variable and the categorical independent variable will be monotonic (they increase or decrease together). But this is not always the case. We could imagine the case where two symbols are displayed during reward payout. Either, neither, or both could be displayed on any trial. For that, we need to create *dummy variables*. A dummy variable is a categorical binary variable that represents the presence or absence of an event. We create a dummy variable for each symbol that is 1 if the symbol is present and 0 if absent. This allows us to capture the effect of each symbol on the dependent variable. Let's add a dummy variable to our design matrix.
 
 ```{python}
@@ -570,6 +573,7 @@ plot_dmat(dmat)
 The two new columns on the right side are the dummy variables, whose values are restricted to 0 or 1. Note that on any given trial either the first or second can have the value 1. They are independent of each other.
 
 ### One-hot categorical
+
 What if we wanted to encode the reward payout as a dummy variable? This would allows us to model it as a categorical variable that has a nonlinear relationship with the dependent variable. We would want a dummy variable for each possible value of the reward payout. For that we would use *one-hot encoding*. One-hot encoding is a method of converting a categorical variable into a binary matrix. Each column of the matrix represents a possible value of the categorical variable. The column corresponding to the value of the categorical variable is 1, while all other columns are 0. Note that the number of columns we create is one less than the number of conditions. This is to avoid the problem of *multicollinearity* between the intercept column and our one-hot encoding columns. We will explain this further later. For now, let's add a one-hot encoding of the reward payout to our design matrix.
 
 ```{python}
@@ -587,6 +591,7 @@ plot_dmat(dmat)
 Here we have added three columns to the design matrix, one for each possible payout (1, 2, and 3), excluding the 0 payout column. No trial can have more than one of these columns with a value of 1. This is because the reward payout can only take on one value at a time. If there is a non-monotonic relationship between the dependent variable and the reward payout, this design matrix will allow us to capture that relationship by giving a unique $\beta$ coefficient to each payout value. If the payout is zero, none of the dummy columns for payout will be 1. Instead, the intercept column will reflect that condition, or more precisely the condition where the payout was not 1, 2, or 3. You can think of each of the one-hot encoded dummy variables are representing the change in the dependent variable by presence of that payout value relative to no payout. It is important to keep in mind that you do not have to choose the 0 payout condition. We could have chosen the 1 payout condition as the reference and then the intercept would represent the condition where the payout was not 1. This is a choice you have to make when designing your model. It is often just conceptually easier to go with the 0 condition.
 
 ### Interaction term
+
 The last kind of variable we consider is an interaction term. This occurs when the effect of one factor on the dependent variable depends on the value of another factor. For instance, the effect of Factor 1 on the dependent variable could depend on the symbols presented. We could model this by adding a columns to the design matrix that are the product of the reward payout and each of the symbols. This would allow us to capture the interaction between Factor 1 and the symbols. Let's add an interaction term to our design matrix.
 
 ```{python}
