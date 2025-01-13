@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Regression 2 – Regression Notes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Regression Notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.qmd"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Regression1.html"> 
+<span class="menu-text">Regression 1</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Regression2.html" aria-current="page"> 
+<span class="menu-text">Regression 2</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="./about.qmd"> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#logistic-regression-modeling-probability-of-binary-outcomes" id="toc-logistic-regression-modeling-probability-of-binary-outcomes" class="nav-link active" data-scroll-target="#logistic-regression-modeling-probability-of-binary-outcomes">Logistic regression: modeling probability of binary outcomes</a>
+  <ul class="collapse">
+  <li><a href="#a-quick-probability-primer" id="toc-a-quick-probability-primer" class="nav-link" data-scroll-target="#a-quick-probability-primer">A quick probability primer</a></li>
+  <li><a href="#the-logistic-function" id="toc-the-logistic-function" class="nav-link" data-scroll-target="#the-logistic-function">The logistic function</a></li>
+  <li><a href="#logistic-regression-for-binary-classification" id="toc-logistic-regression-for-binary-classification" class="nav-link" data-scroll-target="#logistic-regression-for-binary-classification">Logistic regression for binary classification</a></li>
+  </ul></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized linear models</a>
+  <ul class="collapse">
+  <li><a href="#example-with-visual-coding" id="toc-example-with-visual-coding" class="nav-link" data-scroll-target="#example-with-visual-coding">Example with visual coding</a></li>
+  </ul></li>
+  <li><a href="#regularization" id="toc-regularization" class="nav-link" data-scroll-target="#regularization">Regularization</a>
+  <ul class="collapse">
+  <li><a href="#l2-and-l1-penalties" id="toc-l2-and-l1-penalties" class="nav-link" data-scroll-target="#l2-and-l1-penalties">L2 and L1 penalties</a></li>
+  <li><a href="#regularization-with-statsmodels" id="toc-regularization-with-statsmodels" class="nav-link" data-scroll-target="#regularization-with-statsmodels">Regularization with statsmodels</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Regression 2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>For this lecture we will graft additional features onto our linear model to allow it to handle a wider array of situations. To start, we will consider the case where the dependent variable is binary, requiring the use of logistic regression. We will then show how logistic regression is just a special case of a more general class of models called generalized linear models. With these we can model a variety of different types of dependent variables, including count data and ordinal data. Lastly, we will explore how to evaluate the performance of these models and control for overfitting by splitting our data into training and testing sets and incorporating regularization.</p>
+<div id="0fc0b953" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> patsy <span class="co"># for creating design matrices</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="logistic-regression-modeling-probability-of-binary-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-regression-modeling-probability-of-binary-outcomes">Logistic regression: modeling probability of binary outcomes</h2>
+<p>A binary classifier takes a set of measurements, <span class="math inline">\boldsymbol{X}</span>, as inputs and returns the probability that they were generated by a specific event, <span class="math inline">\hat{\boldsymbol{y}}</span>. To get from <span class="math inline">\boldsymbol{x}</span> to <span class="math inline">\hat{\boldsymbol{y}}</span>, we need a function that describes the <em>probability</em> of the class occurring over a range of measurement values.</p>
+<section id="a-quick-probability-primer" class="level3">
+<h3 class="anchored" data-anchor-id="a-quick-probability-primer">A quick probability primer</h3>
+<p>Probabiltilies describe how likely events are to occur. They range from 0, for events that never happen, to 1, for events that are guaranteed to happen. When quantifying probabilities we do this for a class of events, with the total probability across all events adding up to 1 (which means that at any time one of them has to occur). For instance, in the case of flipping a coin, there is a 0.5 (1/2 or 50%) chance that the coin will come up Heads, and 0.5 that it will be Tails. These are the only possibilities (this is a Platonic coin, so it has no thickness and thus cannot land on its side). A coin flip is a good example of an <em>unconditional probability</em>, which is the same regardless of the circumstances. For this, we would write:</p>
+<p><span class="math display">\begin{align}
+p(H)&amp;=0.5 \\
+p(T)&amp;=0.5 \\
+\end{align}
+</span></p>
+<p>which says that the probability of the coin coming up heads, <span class="math inline">p(H)</span>, is 0.5, and the probability of coming up tails, <span class="math inline">p(T)</span>, is 0.5.</p>
+<p>But probabilities can also depend on the situation, such as the probability that you will buy lunch at a certain time. It is more likely that you will purchase lunch at 11:30 AM than at 10:00 AM. This is a <em>conditional probability</em>. Conditional probabilities are expressed as <span class="math inline">P(Lunch|Time)</span>, which translates as the probability of going for Lunch, (<span class="math inline">Lunch</span>), is conditional, <span class="math inline">|</span>, on the time, <span class="math inline">Time</span>. For a conditional probability we need to know the time to give the probability that we are going to lunch.</p>
+</section>
+<section id="the-logistic-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-logistic-function">The logistic function</h3>
+<p>One equation that is a useful way to express a conditional probability is the <em>logistic function</em> (also known as the sigmoid function). It has the form:</p>
+<p><span class="math display"> \sigma(x) = \frac{1}{1+e^{-x}} </span></p>
+<p>Let’s code it up and visualize it:</p>
+<div id="789b97d4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a logistic function</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logistic(x):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>x)) </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the logistic function</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, logistic(x))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Logistic Function'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.yticks(np.arange(<span class="dv">0</span>, <span class="fl">1.1</span>, <span class="fl">0.25</span>))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-3-output-1.png" width="597" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This function has a couple of features that make it useful for modeling probabilities. First, it is bounded between 0 and 1, meaning that it will not go beyond the range of values taken by a measure of probability. Second, it’s value can be directly interpreted as a probability. For instance, if <span class="math inline">\sigma(x)=0.5</span>, then the probability of the event occurring is 0.5. If it returns a value greater than 0.5, we can say that the event is more likely to occur than not. If it returns a value less than 0.5, we can say that the event is less likely to occur than not. When we use the logistic function to predict whether an event will occur, 0.5 will be our cutoff. This is often referred to as the <em>decision boundary</em>.</p>
+<p>We can insert our linear model into the logistic function to get the probability of an event occurring. Recall that: <span class="math display">
+\begin{align}
+\boldsymbol{y}_i &amp;= \boldsymbol{\beta}_0 + \boldsymbol{\beta}_1\boldsymbol{x}_{1,i} + \boldsymbol{\beta}_2\boldsymbol{x}_{2,i} + \boldsymbol{\beta}_3\boldsymbol{x}_{3,i} + ... + \boldsymbol{\beta}_p\boldsymbol{x}_{p,i} \notag \\
+\boldsymbol{y}_i &amp;= \boldsymbol{\beta}_0 + \sum_{j=1}^{p}\boldsymbol{\beta}_j\boldsymbol{x}_{j,i} \notag \\
+\boldsymbol{y} &amp;= \boldsymbol{X}\boldsymbol{\beta} \notag \\
+\end{align}
+</span></p>
+<p>We can pass this into the logistic function to get the probability the event occurring. This is the logistic regression model.</p>
+<p><span class="math display"> \begin{align}
+\hat{y}_i &amp;= \frac{1}{1+e^{-(\boldsymbol{\beta}_0 + \sum_{j=1}^{p}\boldsymbol{\beta}_j\boldsymbol{x}_{j,i})}} \notag \\
+\hat{\boldsymbol{y}} &amp;= \frac{1}{1+e^{-\boldsymbol{\beta} \boldsymbol{x}}} \notag \\
+\end{align}
+</span></p>
+<p>where <span class="math inline">\boldsymbol{\beta}</span> is a vector of <span class="math inline">\beta</span> coefficients and <span class="math inline">\boldsymbol{x}</span> is a vector of dependent variables.</p>
+<p>Given that we have modified the input to the logistic function to now be a linear equation, we can try to understand how the decision boundary is affected by the <span class="math inline">\boldsymbol{\beta}</span> vector. To start, we will consider the simple case where we just have an intercept, <span class="math inline">\boldsymbol{\beta}_0</span>, and one independent variable, <span class="math inline">\boldsymbol{\beta}_1</span>. Since the decision boundary happens at <span class="math inline">\sigma(x)=0.5</span>, we can solve for <span class="math inline">x</span> when <span class="math inline">\sigma(x)=0.5</span>.</p>
+<p><span class="math display"> \begin{align}
+        \notag 0.5&amp;=\frac{1}{1+e^{-x}} \\
+        \notag 0.5&amp;=\frac{1}{1+e^{-0}} \\
+        \notag 0.5&amp;=\frac{1}{1+1} \\
+        \notag 0.5&amp;=\frac{1}{2}
+    \end{align}
+</span></p>
+<p>Since the decision boundary will occur when <span class="math inline">\boldsymbol{\beta}_0 + \boldsymbol{\beta}_1x=0</span>, we can use some simple algebra to solve for the corresponding value of <span class="math inline">x</span>. <span class="math display"> \begin{align}
+        \notag 0&amp;=-(\boldsymbol{\beta}_0+\boldsymbol{\beta}_1x) \\
+        \notag 0&amp;=-\boldsymbol{\beta}_0-\boldsymbol{\beta}_1x \\
+        \notag \boldsymbol{\beta}_0&amp;=-\boldsymbol{\beta}_1x \\
+        \notag -\frac{\boldsymbol{\beta}_0}{\boldsymbol{\beta}_1}&amp;=x
+    \end{align}
+</span></p>
+<p>This means that the decision boundary depends on both the intercept and the slope. As you increase the intercept, you move the decision boundary to lower values. Increasing the slope, however, will shift the boundary towards 0. Let’s visualize these relationships.</p>
+<div id="fb685d03" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logistic_linear(x, beta):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logistic(np.dot(x, beta))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.hstack([np.ones((<span class="dv">100</span>,<span class="dv">1</span>)), np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>var_ints <span class="op">=</span> [<span class="op">-</span><span class="dv">5</span>,<span class="op">-</span><span class="fl">2.5</span>,<span class="dv">0</span>,<span class="fl">2.5</span>,<span class="dv">5</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>var_slopes <span class="op">=</span> [<span class="fl">0.125</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">2</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_int <span class="kw">in</span> <span class="bu">enumerate</span>(var_ints):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> logistic_linear(x, [var_int, <span class="dv">1</span>])</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'intercept=</span><span class="sc">{</span>var_int<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,ind<span class="op">/</span><span class="bu">len</span>(var_ints)])</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].vlines(<span class="op">-</span>var_int, <span class="dv">0</span>, <span class="dv">1</span>, color<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,ind<span class="op">/</span><span class="bu">len</span>(var_ints)], linestyle<span class="op">=</span><span class="st">':'</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].legend()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].grid()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Varying Intercept'</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'$\sigma(x)$'</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_slope <span class="kw">in</span> <span class="bu">enumerate</span>(var_slopes):</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> logistic_linear(x, [<span class="dv">0</span>, var_slope])</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'slope=</span><span class="sc">{</span>var_slope<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[ind<span class="op">/</span><span class="bu">len</span>(var_slopes),<span class="dv">0</span>,<span class="dv">0</span>])</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].legend()</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].grid()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'Varying Slope'</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">'x'</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-4-output-1.png" width="660" height="468" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One thing in common for the logistic curves plotted above is that as we increase <span class="math inline">x</span> the probability also increases. To make the probability decrease as <span class="math inline">x</span> increases, we set our slope to be negative. If we do this without also changing the sign of our intercept, then the decision boundary will change too (see the equation above). In addition, as we increase the magnitude of the slope, the decision boundary will move closer to 0.</p>
+<div id="69ead298" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_int <span class="kw">in</span> <span class="bu">enumerate</span>(var_ints):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> logistic_linear(x, [var_int, <span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'intercept=</span><span class="sc">{</span>var_int<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,ind<span class="op">/</span><span class="bu">len</span>(var_ints)])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].vlines(<span class="op">-</span>var_int, <span class="dv">0</span>, <span class="dv">1</span>, color<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,ind<span class="op">/</span><span class="bu">len</span>(var_ints)], linestyle<span class="op">=</span><span class="st">':'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].legend()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].grid()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Varying Intercept with negative slope'</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'$\sigma(x)$'</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_int <span class="kw">in</span> <span class="bu">enumerate</span>(var_ints):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> logistic_linear(x, [var_int, <span class="fl">2.5</span>])</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'intercept=</span><span class="sc">{</span>var_int<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[ind<span class="op">/</span><span class="bu">len</span>(var_ints),<span class="dv">0</span>,<span class="dv">0</span>])</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].vlines(<span class="op">-</span>var_int<span class="op">/</span><span class="fl">2.5</span>, <span class="dv">0</span>, <span class="dv">1</span>, color<span class="op">=</span>[ind<span class="op">/</span><span class="bu">len</span>(var_ints),<span class="dv">0</span>,<span class="dv">0</span>], linestyle<span class="op">=</span><span class="st">':'</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].legend()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].grid()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'Varying Intercept with larger slope'</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_ylabel(<span class="st">'$\sigma(x)$'</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-5-output-1.png" width="660" height="469" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In general, we can say that the direction of increasing probability is determined by the slope, <span class="math inline">\boldsymbol{\beta}_1</span>, and the location of the decision boundary is determined by the intercept (<span class="math inline">\boldsymbol{\beta}_0</span>) scaled by the slope. In general, this holds true for multiple dimensions as well. The decision boundary is a hyperplane that is perpendicular to the weight vector, <span class="math inline">\boldsymbol{\beta_{1:p}}</span>. The offset of the decision boundary from the origin is determined by the intercept and the slope of the weight vector. This is fairly easy to see in two dimensions, when you have two independent variables.</p>
+<div id="ecf08c01" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_1, x_2 <span class="op">=</span> np.meshgrid(np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>), np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x_1 <span class="op">=</span> x_1.flatten()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x_2 <span class="op">=</span> x_2.flatten()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>betas <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>], [<span class="op">-</span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>]])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> logistic_linear(np.hstack([np.ones((<span class="dv">10000</span>,<span class="dv">1</span>)), np.vstack([x_1, x_2]).T]), betas[<span class="dv">0</span>])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].imshow(y.reshape(<span class="dv">100</span>,<span class="dv">100</span>), origin<span class="op">=</span><span class="st">'lower'</span>, extent<span class="op">=</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot([<span class="dv">0</span>, <span class="dv">0</span>],[<span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>], color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Beta = </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(betas[<span class="dv">0</span>]))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].grid()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> logistic_linear(np.hstack([np.ones((<span class="dv">10000</span>,<span class="dv">1</span>)), np.vstack([x_1, x_2]).T]), betas[<span class="dv">1</span>])</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].imshow(y.reshape(<span class="dv">100</span>,<span class="dv">100</span>), origin<span class="op">=</span><span class="st">'lower'</span>, extent<span class="op">=</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].plot([<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>],[<span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>], color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'Beta = </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(betas[<span class="dv">1</span>]))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].grid()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> logistic_linear(np.hstack([np.ones((<span class="dv">10000</span>,<span class="dv">1</span>)), np.vstack([x_1, x_2]).T]), betas[<span class="dv">2</span>])</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">2</span>].imshow(y.reshape(<span class="dv">100</span>,<span class="dv">100</span>), origin<span class="op">=</span><span class="st">'lower'</span>, extent<span class="op">=</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">2</span>].plot([<span class="op">-</span><span class="dv">6</span>, <span class="dv">10</span>],[<span class="dv">10</span>, <span class="op">-</span><span class="dv">6</span>], color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">2</span>].set_title(<span class="st">'Beta = </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(betas[<span class="dv">2</span>]))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">2</span>].grid()</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-6-output-1.png" width="757" height="264" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here the decision boundary is denoted by the red dashed line, the probability is the color scale. White is 0 and dark blue is 1. If we set the intercept to 0 and <span class="math inline">\boldsymbol{\beta}_1</span> to 1, then we have the 2D version of the default logistic function. The decision boundary is a vertical line at <span class="math inline">x_1=0</span>. When both <span class="math inline">\boldsymbol{\beta}_1</span> and <span class="math inline">\boldsymbol{\beta}_2</span> are 1, the decision boundary is a diagonal line. The direction of the decision boundary is determined by the weights. If we then set the intercept, <span class="math inline">\boldsymbol{\beta}_0</span>, to a non-zero value (here -4), we shift that decision boundary away from the origin.</p>
+</section>
+<section id="logistic-regression-for-binary-classification" class="level3">
+<h3 class="anchored" data-anchor-id="logistic-regression-for-binary-classification">Logistic regression for binary classification</h3>
+<p>Let’s now try to fit a logistic function to some real data. For this example I have compiled a small dataset where the strength of an evoked response potential (ERP) was measured. On some trials, an auditory stimulus was given, driving a strong ERP, while on others no auditory stimulus was presented, resulting in no ERP. The goal is to predict whether an auditory stimulus was given based on the strength of the ERP. We will use logistic regression to do this. First we will load in the data.</p>
+<div id="83dc7c64" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> <span class="st">'./data/'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>logreg_data <span class="op">=</span> json.load(<span class="bu">open</span>(os.path.join(data_dir, <span class="st">'logregdata.json'</span>), <span class="st">'r'</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># convert the data to numpy arrays</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array(logreg_data[<span class="st">'X'</span>])</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array(logreg_data[<span class="st">'y'</span>])</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># display to make sure it looks right</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'X = </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(X))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'y = </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>X = [ 47.8682191   79.21943476  59.77661572  67.42808345 106.59886022
+  45.76555801 103.45205398  56.59460022  60.77195205 111.57862896
+  32.41245229 118.75920507  41.79053316  81.33619878  54.6388707
+  45.60598449  51.5419817   39.32098506  45.9932129   52.26591628
+  27.40391158  26.07979312  46.61066192  25.94308383  64.4758095
+  -1.39409509 -17.08503545  49.70176208 -11.90910869  34.66836456
+   8.93607429  17.14723219 -29.02676859   3.89797864 -17.66074236
+   3.3038969   26.80126476  31.49036756  10.76049118   9.53549015
+   4.30966256  13.1381603  -25.56534353   2.20072814  41.21241201
+  -7.3085461   26.00222903  32.07631057  -2.19790223 -19.46658645
+   1.24571761 -20.11255289   0.51001914 -53.37683445]
+y = [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0.]</code></pre>
+</div>
+</div>
+<p>We have two numpy arrays values. <code>X</code> is the ERP strength measured on each trial, while <code>y</code> is a binary variable indicating whether an auditory stimulus was given. To fit a logistic regression model to this data, we will use the <code>Logit</code> class from the <code>statsmodels</code> package. This function behaves similar to the <code>OLS</code> function used in the last lecture. We will use the <code>fit</code> method to fit the model to the data. The <code>summary</code> method will give us a summary of the model fit.</p>
+<p>It is a good idea to visualize the data before fitting a model to it. This should give you a sense of how well the model will fit the data and whether there are outliers.</p>
+<div id="36a9051f" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(X, y, c<span class="op">=</span>y, cmap<span class="op">=</span><span class="st">'bwr'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'ERP strength'</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Auditory stimulus present'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'ERP strength vs. auditory stimulus present'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>ax.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-8-output-1.png" width="595" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This graph separates out the data points corresponding to trials when a auditory stimulus was present (in red) or absent (in blue). Here we can see that on average the ERP strength values are higher when a auditory stimulus is present. Trials where the auditory stimulus were given have a <code>y</code> value of 1, while those without the stimulus are 0.</p>
+<p>Now we will use the <code>Logit</code> class to fit a logistic regression model to the data.</p>
+<div id="4385d4e9" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a pandas dataframe of the data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'ERP'</span>: X.flatten(), <span class="st">'stim'</span>: y.flatten()})</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create a logistic regression model</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>mdl<span class="op">=</span> sm.Logit(df[<span class="st">'stim'</span>], sm.add_constant(df[<span class="st">'ERP'</span>]))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mdl.fit()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print the summary statistics</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Optimization terminated successfully.
+         Current function value: 0.241408
+         Iterations 8
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                   stim   No. Observations:                   54
+Model:                          Logit   Df Residuals:                       52
+Method:                           MLE   Df Model:                            1
+Date:                Mon, 13 Jan 2025   Pseudo R-squ.:                  0.6503
+Time:                        12:28:02   Log-Likelihood:                -13.036
+converged:                       True   LL-Null:                       -37.282
+Covariance Type:            nonrobust   LLR p-value:                 3.318e-12
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -4.3803      1.432     -3.060      0.002      -7.186      -1.575
+ERP            0.1332      0.040      3.365      0.001       0.056       0.211
+==============================================================================</code></pre>
+</div>
+</div>
+<p>The fitting was successful. It appears that the ERP strength is a significant predictor of whether an auditory stimulus was given. We can see this from the ‘P&gt;|z|’ column in the summary table. There, the p-value for the ERP term is 0.001. We can also find the decision boundary based on the coefficients that the model has learned. ‘Const’ is the value of the intercept, and ‘ERP’ is the slope. The decision boundary is given by <span class="math inline">-\frac{Const}{ERP}=\frac{-4.38}{0.13}=33.69</span>.</p>
+<p>The logistic model <span class="math inline">\boldsymbol{\beta}</span> values can be pulled out of the <code>results</code> object. These are found in the <code>params</code> attribute. The first element in the <code>params</code> array is the intercept (<span class="math inline">\boldsymbol{\beta}_0</span>), while each successive element is the beta for the corresponding factor in the model. Passing these to our logistic function, we can generate the curve that the model has learned, and precisely calculate the decision boundary.</p>
+<div id="3b1dbdab" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(X, y, c<span class="op">=</span>y, cmap<span class="op">=</span><span class="st">'bwr'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ax.plot(np.sort(X), logistic(res.params[<span class="dv">0</span>] <span class="op">+</span> res.params[<span class="dv">1</span>] <span class="op">*</span> np.sort(X)), color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>ax.vlines(<span class="op">-</span>res.params[<span class="dv">0</span>]<span class="op">/</span>res.params[<span class="dv">1</span>], <span class="dv">0</span>, <span class="dv">1</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">':'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'ERP strength'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Auditory stimulus present'</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'ERP strength vs. auditory stimulus presence'</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_10598/1259642582.py:3: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  ax.plot(np.sort(X), logistic(res.params[0] + res.params[1] * np.sort(X)), color='k')
+/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_10598/1259642582.py:4: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  ax.vlines(-res.params[0]/res.params[1], 0, 1, color='k', linestyle=':')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-10-output-2.png" width="595" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You might be wondering why go through all this trouble of creating an entirely new model. Perhaps we could just fit our linear model to this dataset? Let’s try this and see how that turns out.</p>
+<div id="d5689ae7" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create linear regression model</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lin_mdl <span class="op">=</span> sm.OLS(df[<span class="st">'stim'</span>], sm.add_constant(df[<span class="st">'ERP'</span>]))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>lin_res <span class="op">=</span> lin_mdl.fit()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print the summary statistics</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lin_res.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   stim   R-squared:                       0.566
+Model:                            OLS   Adj. R-squared:                  0.557
+Method:                 Least Squares   F-statistic:                     67.77
+Date:                Mon, 13 Jan 2025   Prob (F-statistic):           5.48e-11
+Time:                        12:28:02   Log-Likelihood:                -16.518
+No. Observations:                  54   AIC:                             37.04
+Df Residuals:                      52   BIC:                             41.01
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.1620      0.058      2.772      0.008       0.045       0.279
+ERP            0.0101      0.001      8.232      0.000       0.008       0.013
+==============================================================================
+Omnibus:                        7.087   Durbin-Watson:                   1.244
+Prob(Omnibus):                  0.029   Jarque-Bera (JB):                2.452
+Skew:                           0.010   Prob(JB):                        0.293
+Kurtosis:                       1.956   Cond. No.                         60.9
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+</div>
+<p>Ok, so at first glance things don’t look too bad. The statistically significant factors are the same as with the logistic regression model. However, let’s plot the residuals to see if there is a pattern in the errors.</p>
+<div id="afe68cc3" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lin_res.predict(sm.add_constant(df[<span class="st">'ERP'</span>]))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>y_resid <span class="op">=</span> df[<span class="st">'stim'</span>] <span class="op">-</span> y_pred</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>ax.scatter(X, y_resid)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'ERP strength'</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Residual'</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Residuals vs. ERP strength'</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>ax.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-12-output-1.png" width="606" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Eek! This is not good. The residuals are systematically varying with the ERP strength. This arises because the dependent variable can only take on two values, 0 or 1, while the linear model is predicting continuous values ranging from negative to positive infinity. As you keep increasing the ERP strength, you will eventually get values exceeding 1 (or below 0 if you decrease ERP strength), which would not make sense as a value that reflects the probability of an event.</p>
+</section>
+</section>
+<section id="generalized-linear-models" class="level2">
+<h2 class="anchored" data-anchor-id="generalized-linear-models">Generalized linear models</h2>
+<p>The logistic regression model is a special case of a more general class of models called <em>generalized linear models</em> (GLMs). In the logistic model we took our linear model and passed it through a logistic function to get the probability of an event occurring (an auditory stimulus). This was to ensure that the output was bounded between 0 and 1, just as a probability value should be. GLMs are a generalization of this idea. Instead of just using the logistic function, we can use other functions that capture properties of the dependent variable.</p>
+<p>So far we have covered two of them. For the linear model, this is just the identity function, <span class="math inline">f(x)=x</span>. The identity function is used when the dependent variable is continuous and unbounded. For the logistic model, we used, <span class="math inline">f(x)=\frac{1}{1+e^{-x}}</span>.</p>
+<p>In general, a GLM has three components:</p>
+<p>1. A linear model, <span class="math inline">\boldsymbol{y}=\boldsymbol{X}\boldsymbol{\beta}</span>.</p>
+<p>2. A link function, <span class="math inline">g(\mu)</span>, that transforms the conditional mean, <span class="math inline">\mu</span>, of the dependent variable (i.e.&nbsp;its mean value given the dependent variables) to a range suitable for the linear model.</p>
+<p>3. Inverse of the link function, <span class="math inline">f(\boldsymbol{y})</span>, that maps the linear model to the dependent variable. This is what we have used so far for the logistic equation. It is helpful for predicting the dependent variable given the independent variables.</p>
+<p>There are many other mean functions beyond the identity and logistic functions. Below is a table of some and there properties:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 25%">
+<col style="width: 16%">
+<col style="width: 25%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Distribution</th>
+<th>Link function</th>
+<th>Inverse of the link function</th>
+<th>Properties</th>
+<th>Neuroscientific applications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Normal</td>
+<td><span class="math inline">g(\mu)=\mu</span></td>
+<td><span class="math inline">f(y) = y</span></td>
+<td>Continuous, Unbounded</td>
+<td>Relating BOLD signal to task variables</td>
+</tr>
+<tr class="even">
+<td>Poisson</td>
+<td><span class="math inline">g(\mu)=\log(\mu)</span></td>
+<td><span class="math inline">f(y) = e^y</span></td>
+<td>Count data, positive</td>
+<td>Spike counts</td>
+</tr>
+<tr class="odd">
+<td>Binomial</td>
+<td><span class="math inline">g(\mu)=\log(\frac{\mu}{1-\mu})</span></td>
+<td><span class="math inline">f(y) = \frac{1}{1+e^{-y}}</span></td>
+<td>Binary data</td>
+<td>Go/No-go decisions</td>
+</tr>
+<tr class="even">
+<td>Gamma</td>
+<td><span class="math inline">g(\mu)=-\frac{1}{\mu}</span></td>
+<td><span class="math inline">f(y) = -\frac{1}{y}</span></td>
+<td>Continuous, positive</td>
+<td>Reaction times</td>
+</tr>
+</tbody>
+</table>
+<p>In neuroscience one frequently encounters data that is best described by the Poisson distribution. This distribution is appropriate for count data, which starts at 0 and can go up to positive infinity. To map the output of a linear model onto that distribution (i.e.&nbsp;the inverse link function), one uses the the exponential function. This can be expressed as <span class="math inline">\boldsymbol{y}_i=e^{\boldsymbol{\beta}\boldsymbol{X}_i}</span>. The behavior of the exponential function, <span class="math inline">e^x</span>, is such that it is always positive and increases as <span class="math inline">x</span> increases.</p>
+<p>Let’s examine how this function behaves.</p>
+<div id="227ff36f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inverse link function for poisson GLM</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> exp_linear(x, beta):</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.exp(np.dot(x, beta))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters for example exponential functions</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.hstack([np.ones((<span class="dv">100</span>,<span class="dv">1</span>)), np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)])</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>var_ints <span class="op">=</span> [<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>,<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>]</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>var_slopes <span class="op">=</span> [<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.4</span>,<span class="fl">0.5</span>]</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the exponential functions</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_int <span class="kw">in</span> <span class="bu">enumerate</span>(var_ints):</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> exp_linear(x, [var_int, <span class="dv">1</span>])</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'intercept=</span><span class="sc">{</span>var_int<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,ind<span class="op">/</span><span class="bu">len</span>(var_ints)])</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].axhline(<span class="dv">1</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].legend()</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].grid()</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Varying Intercept'</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'$e^x$'</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_slope <span class="kw">in</span> <span class="bu">enumerate</span>(var_slopes):</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> exp_linear(x, [<span class="dv">0</span>, var_slope])</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].plot(x[:,<span class="dv">1</span>], y, label<span class="op">=</span><span class="ss">f'slope=</span><span class="sc">{</span>var_slope<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>[ind<span class="op">/</span><span class="bu">len</span>(var_slopes),<span class="dv">0</span>,<span class="dv">0</span>])</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].legend()</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].grid()</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'Varying Slope'</span>)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">'x'</span>)</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-13-output-1.png" width="660" height="468" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is frequently used with spike count data, where the number of spikes is modeled as a Poisson distribution. The Poisson distribution is a discrete distribution that models the number of events that occur in a fixed interval of time or space. It is defined by a single parameter, <span class="math inline">\lambda</span>, which is the average number of events in the interval (note, since it is an average that means <span class="math inline">\lambda</span> can be a decimal number, it does not have to be an integer like the counts in the Poisson distribution). With a GLM, we can model the expected number of spikes as a function of multiple independent variables. Here <span class="math inline">\lambda=e^{\boldsymbol{X}\boldsymbol{\beta}}</span>.</p>
+<p>Similar to the logistic function, the exponential function will be shifted by the intercept and scaled by the slope. There is no decision boundary in this case, but the slope will determine the rate at which the expected number of spikes increases as the independent variable increases. The intercept will determine the expected number of spikes when the independent variable is 0.</p>
+<section id="example-with-visual-coding" class="level3">
+<h3 class="anchored" data-anchor-id="example-with-visual-coding">Example with visual coding</h3>
+<p>We can use a Poisson GLM to model the number of spikes a neuron produces in response to visual stimuli. Our dependent variables will be the properties of the visual stimuli, while the independent variable will be the number of spikes.</p>
+<p>Since <a href="https://doi.org/10.1113/jphysiol.1959.sp006308">1959</a> it has been known that neurons in the primary visual cortex respond to moving lines in the visual field. It was a <a href="https://www.youtube.com/watch?v=IOHayh06LJ4">chance observation</a> by Hubel and Wiesel, that lead them to identify the space of stimuli that optimally drive neuronal responses in primary visual cortex. They found that when a bar of light moved across a specific area of the visual field, it would elicit single neuron spiking when it occurred at a particular angle. The further it rotated away from that angle, less of a response was elicited.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/HubelWiesel1959.png" class="img-fluid figure-img"></p>
+<figcaption>HubelWiesel1959</figcaption>
+</figure>
+</div>
+<p>While bars of a light can be easily generated and their properties modified, modern visual physiologists use <em>drifting gratings</em>, which can be loosely thought of as a series of white bars moving across a black background. To see what they look like, check out this <a href="https://observatory.brain-map.org/visualcoding/stimulus/drifting_gratings">link</a>.</p>
+<p>Drifting gratings are generally characterized by three parameters:</p>
+<ol type="1">
+<li>Orientation: This is the direction the bars are moving, and varies from 0-360 degrees. Orientation sensitivity is one of the most well studied features of neural coding for drifting gratings. In general, neurons respond preferentially to two orientations that are opposing, meaning they are 180 degrees apart, with the response fading out when you get more than 30 degrees away from the preferred orientation.</li>
+<li>Spatial frequency: The width of the bars. The thicker the bars are, the lower the spatial frequency. The narrower the bars are, the higher the spatial frequency. Neurons tend to have a preferred spatial frequency.</li>
+<li>Temporal frequency: How fast are the bars moving across the visual field. A higher frequency means the bars are drifting faster. Neurons tend to have a preferred temporal frequency.</li>
+<li>Contrast: The degree to which the black and white lines of the grating deviate from gray. Neurons in V1 typically respond with increasing vigor as the contrast is raised from an all gray screen to solid black and white bars.</li>
+</ol>
+<p>We will examine the responses of neurons in mouse primary visual cortex to these stimuli. The Allen Institute has a publicly available dataset of of such data. The data we will work with was collected while mice viewed a wide variety of stimuli, including many drifting gratings. According to their <a href="https://portal.brain-map.org/explore/circuits/visual-coding-neuropixels">white paper</a>, the drifting gratings all had the same contrast (80%) and spatial frequency (0.04 cycles/degree), but varied in their orientation (0-315 in 45 degree increments), and temporal frequency (1, 2, 4, 8, and 15 Hz).</p>
+<p>I have compiled a small dataset of the spiking responses of neurons to these stimuli from a single mouse.</p>
+<div id="217ae03d" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load v1 response data</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>v1_resp <span class="op">=</span> pd.read_csv(<span class="st">'./data/v1_dg_resp.csv'</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>v1_resp.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">stimulus_presentation_id</th>
+<th data-quarto-table-cell-role="th">start_time</th>
+<th data-quarto-table-cell-role="th">stop_time</th>
+<th data-quarto-table-cell-role="th">orientation</th>
+<th data-quarto-table-cell-role="th">temporal_frequency</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">52</th>
+<th data-quarto-table-cell-role="th">53</th>
+<th data-quarto-table-cell-role="th">54</th>
+<th data-quarto-table-cell-role="th">55</th>
+<th data-quarto-table-cell-role="th">56</th>
+<th data-quarto-table-cell-role="th">57</th>
+<th data-quarto-table-cell-role="th">58</th>
+<th data-quarto-table-cell-role="th">59</th>
+<th data-quarto-table-cell-role="th">60</th>
+<th data-quarto-table-cell-role="th">61</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>3815</td>
+<td>1636.690362</td>
+<td>1638.692042</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>18</td>
+<td>21</td>
+<td>...</td>
+<td>81</td>
+<td>0</td>
+<td>11</td>
+<td>12</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td>28</td>
+<td>27</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>3866</td>
+<td>1789.818328</td>
+<td>1791.819968</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+<td>11</td>
+<td>...</td>
+<td>19</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>9</td>
+<td>11</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3884</td>
+<td>1843.863438</td>
+<td>1845.865118</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>11</td>
+<td>13</td>
+<td>...</td>
+<td>51</td>
+<td>0</td>
+<td>14</td>
+<td>8</td>
+<td>1</td>
+<td>1</td>
+<td>9</td>
+<td>42</td>
+<td>19</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3893</td>
+<td>1870.886012</td>
+<td>1872.887682</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>9</td>
+<td>11</td>
+<td>...</td>
+<td>37</td>
+<td>0</td>
+<td>6</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>21</td>
+<td>10</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3924</td>
+<td>1963.963798</td>
+<td>1965.965448</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>7</td>
+<td>16</td>
+<td>...</td>
+<td>72</td>
+<td>3</td>
+<td>12</td>
+<td>9</td>
+<td>0</td>
+<td>2</td>
+<td>14</td>
+<td>56</td>
+<td>32</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 67 columns</p>
+</div>
+</div>
+</div>
+<p>The data has been imported as a pandas dataframe. Each row corresponds to the presentation of a drifting grating stimulus. The fields ‘orientation’ and ‘temporal_frequency’ describe properties of the drifting grating that was presented. Columns that are numbered correspond to different neurons that were recorded from. Each entry in a column contains the number of spikes that neuron fired during the 2 seconds that a stimulus was presented. You can see from the first 5 entries in the table that the same stimulus was presented multiple times. This allows us to get a sense of the variability in the neuron’s response to the same stimulus. If we want to quickly inspect the mean response of each neuron to the different stimuli, we can use the <code>Dataframe</code>’s <code>pivot_table</code> method to calculate the mean response of each neuron to each type of stimulus.</p>
+<div id="02f385e4" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>nrn_ids <span class="op">=</span> [<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">62</span>)] <span class="co"># neuron ids, 0-61</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>v1_rfs <span class="op">=</span> v1_resp.pivot_table(index<span class="op">=</span>[<span class="st">'orientation'</span>, <span class="st">'temporal_frequency'</span>], values<span class="op">=</span>nrn_ids, aggfunc<span class="op">=</span><span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e389ed53" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the receptive field of neuron 11</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>example_rf <span class="op">=</span> v1_rfs[<span class="st">'16'</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ori <span class="op">=</span> np.unique(v1_rfs.index.get_level_values(<span class="st">'orientation'</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> np.unique(v1_rfs.index.get_level_values(<span class="st">'temporal_frequency'</span>))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2D rf plotting function, we will use this a lot in subsequent analyses</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rf_plot(rf, title<span class="op">=</span><span class="st">'Receptive Field'</span>, ax<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    imh <span class="op">=</span> ax.imshow(rf.T, origin<span class="op">=</span><span class="st">'lower'</span>, aspect<span class="op">=</span><span class="st">'auto'</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Orientation (degrees)'</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Temporal frequency (Hz)'</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks(np.arange(<span class="dv">0</span>,<span class="dv">8</span>))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    ax.set_xticklabels(ori)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> tick <span class="kw">in</span> ax.get_xticklabels():</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        tick.set_rotation(<span class="dv">90</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks(np.arange(<span class="dv">0</span>,<span class="dv">5</span>))</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    ax.set_yticklabels(tf)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(imh, ax<span class="op">=</span>ax)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot(ori, np.mean(example_rf, axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Orientation tuning'</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_xlabel(<span class="st">'Orientation (degrees)'</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'Spike count (2 sec window)'</span>)</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].grid()</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].plot(tf, np.mean(example_rf,axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'Temporal frequency tuning'</span>)</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">'Temporal frequency (Hz)'</span>)</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].grid()</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>rf_plot(example_rf, ax<span class="op">=</span>axs[<span class="dv">2</span>])</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-16-output-1.png" width="756" height="373" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We have plotted the response of the neuron in three different ways. The first captures the orientation tuning by plotting the mean response of the neuron to each orientation irrespective of the temporal frequency. The second plot does the same but for temporal frequency. Lastly, the third plot illustrates the response as a two dimensional image with color being the spike count, orientation along the x-axis, and temporal frequency along the y-axis. For this example neuron we can see that it responds vigorously to stimuli with an orientation of 90 degrees, and that response increases with the temporal frequency of the drifting grating.</p>
+<p>The neurons in this dataset exhibit a wide variety of responses.</p>
+<div id="c869aa61" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot a grid of the receptive fields from all neurons</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">8</span>,<span class="dv">8</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> axs.flatten()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind,<span class="bu">id</span> <span class="kw">in</span> <span class="bu">enumerate</span>(nrn_ids):</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    curr_rf <span class="op">=</span> v1_rfs[<span class="bu">id</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>).T</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    axs[ind].imshow(curr_rf, origin<span class="op">=</span><span class="st">'lower'</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    axs[ind].set_xticks([])</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    axs[ind].set_yticks([])</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">62</span>].axis(<span class="st">'off'</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">63</span>].axis(<span class="st">'off'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'Receptive fields of V1 neurons'</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-17-output-1.png" width="662" height="475" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Imagine we want to model the response of a single neuron to these stimuli. We can use a Poisson GLM to do this. We will use the <code>GLM</code> class from the <code>statsmodels</code> package to fit the model. Since the response of a neuron depends on both the orientation and temporal frequency of the drifting grating, along with their interaction, we will have to include all these terms in the model.</p>
+<p>There is one extra complication here, though. Unlike the linear model we fit using the <code>OLS</code> class, we cannot just pass the dataframe and formula to the <code>GLM</code> function. Instead, we have to use another package to construct the design matrix <code>X</code> and the response vector <code>y</code>. We will use the <code>patsy</code> package to do this. The <code>dmatrices</code> function from the <code>patsy</code> package takes a formula and dataframe, then returns the design matrix and response vector. We can then pass these to the <code>GLM</code> function to fit the model.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Formula specification
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>patsy</code> allows you to specify formulae that can be translated into design matrices. There are many operators and features supported by them, but we will focus on just a few. For a detailed treatment of this, see <a href="https://patsy.readthedocs.io/en/latest/formulas.html">here</a>. Here <code>y</code> is the dependent variable and <code>x1</code> and <code>x2</code> are independent variables.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 54%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>~</code></td>
+<td>Separates the dependent variable from the independent variables.</td>
+<td><code>y ~ x1 + x2</code></td>
+</tr>
+<tr class="even">
+<td><code>+</code></td>
+<td>Adds a term to the model.</td>
+<td><code>y ~ x1 + x2</code></td>
+</tr>
+<tr class="odd">
+<td><code>*</code></td>
+<td>Includes the interaction between variables and their main effects.</td>
+<td><code>y ~ x1 * x2</code></td>
+</tr>
+<tr class="even">
+<td><code>:</code></td>
+<td>Includes only the interaction between variables, without main effects.</td>
+<td><code>y ~ x1 : x2</code></td>
+</tr>
+<tr class="odd">
+<td><code>**</code></td>
+<td>Includes polynomial terms up to the specified degree.</td>
+<td><code>y ~ x1 + x2**2</code></td>
+</tr>
+<tr class="even">
+<td><code>C()</code></td>
+<td>Indicates that a variable should be treated as a categorical variable.</td>
+<td><code>y ~ C(x1)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Another formatting detail is that the values in the ‘orientation’ and ‘temporal_frequency’ columns are stored as numeric data types. This means that if we construct a model it will treat these as continuous variables. This would result in the model trying to fit a single slope to the firing rate as a function of either orientation or temporal frequency. However, looking at our neurons, we can see that they respond to orientation and temporal frequency in a non-linear manner. Instead, we should treat these as categorical variables, with a separate <span class="math inline">\beta</span> coefficients for each orientation and temporal frequency. We also want our dependent variable to have a meaningful name, instead of just the unit ID number. We will wrap together the renaming and design matrix creation into a single function.</p>
+<div id="43dee4a9" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a simple function for defining our design matrices</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> format_tables(df, unit_id, fm<span class="op">=</span><span class="st">'spike_count ~ 1'</span>): <span class="co"># default formula is just the spike count with an intercept</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.copy()</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    y, X <span class="op">=</span> patsy.dmatrices(fm, df.rename(columns<span class="op">=</span>{unit_id: <span class="st">'spike_count'</span>}))</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y, X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To start using GLMs, let’s create a simple model that just tries to model the response of the neuron as a function of the orientation and temporal frequencies of the drifting gratings, but doesn’t consider their interaction. For those of you that have taken a statistics class, this is just a main effects model.</p>
+<div id="f779c8cf" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the design matrix</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> format_tables(v1_resp, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) + C(temporal_frequency)'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize poisson GLM model</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp_mdl.fit()</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print the summary statistics</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:            spike_count   No. Observations:                  600
+Model:                            GLM   Df Residuals:                      588
+Model Family:                 Poisson   Df Model:                           11
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -1648.5
+Date:                Mon, 13 Jan 2025   Deviance:                       2126.0
+Time:                        12:28:03   Pearson chi2:                 2.56e+03
+No. Iterations:                     7   Pseudo R-squ. (CS):              1.000
+Covariance Type:            nonrobust                                         
+=================================================================================================
+                                    coef    std err          z      P&gt;|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------
+Intercept                        -0.8758      0.158     -5.549      0.000      -1.185      -0.566
+C(orientation)[T.45.0]            0.9719      0.181      5.365      0.000       0.617       1.327
+C(orientation)[T.90.0]            4.2313      0.155     27.225      0.000       3.927       4.536
+C(orientation)[T.135.0]           0.6690      0.190      3.526      0.000       0.297       1.041
+C(orientation)[T.180.0]           0.0465      0.216      0.216      0.829      -0.376       0.469
+C(orientation)[T.225.0]           0.6318      0.191      3.308      0.001       0.257       1.006
+C(orientation)[T.270.0]           3.8008      0.156     24.361      0.000       3.495       4.107
+C(orientation)[T.315.0]           0.8267      0.185      4.468      0.000       0.464       1.189
+C(temporal_frequency)[T.2.0]      0.2260      0.048      4.698      0.000       0.132       0.320
+C(temporal_frequency)[T.4.0]      0.2731      0.048      5.736      0.000       0.180       0.366
+C(temporal_frequency)[T.8.0]      0.2886      0.047      6.083      0.000       0.196       0.382
+C(temporal_frequency)[T.15.0]     0.5987      0.045     13.408      0.000       0.511       0.686
+=================================================================================================</code></pre>
+</div>
+</div>
+<p>Examining the summary table, we can see that the model detected a significant relationship between the response of the neuron and the orientation and temporal frequency of drifting gratings. In particular, notice that the <span class="math inline">\beta</span> coefficients for 90 and 270 degrees are the largest, which matches what we saw in the orientation tuning plot above. Note also that the temporal frequency <span class="math inline">\beta</span> coefficients increase, which matches what we saw in the temporal frequency tuning plot. To evaluate the model fit, we can plot the predicted response of the neuron against the actual response.</p>
+<div id="9106c554" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get observed RF</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>rf_true <span class="op">=</span> v1_rfs[<span class="st">'16'</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the predicted receptive field</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># predicted response</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>resp_pred <span class="op">=</span> res.predict(X) </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape to 8x5x15, the dimensions of the RF and repetitions of each condition</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>resp_pred <span class="op">=</span> resp_pred.reshape(<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">15</span>) </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># take the first repetition of the predicted RF, all other repetitions are the same</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>rf_pred <span class="op">=</span> resp_pred[:,:,<span class="dv">0</span>]</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the residual</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>rf_resid <span class="op">=</span> rf_true <span class="op">-</span> rf_pred</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">4</span>))</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_true, title<span class="op">=</span><span class="st">'True RF'</span>, ax<span class="op">=</span>axs[<span class="dv">0</span>])</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_pred, title<span class="op">=</span><span class="st">'Predicted RF'</span>, ax<span class="op">=</span>axs[<span class="dv">1</span>])</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_resid, title<span class="op">=</span><span class="st">'Residual RF'</span>, ax<span class="op">=</span>axs[<span class="dv">2</span>])</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>fig.tight_layout() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-20-output-1.png" width="1134" height="373" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Our model seems to be doing a good job of capturing the response of the neuron to the drifting gratings. The predicted response is closely tracking the actual response. However, there are some substantial deviations evident in the residual. In particular, the model is overestimating the response for drifting gratings at 90 degrees and 15 Hz, and usually underestimating the response at lower temporal frequencies. To account for this, we can add interaction terms to our model, to capture the response of the neuron to each combination of orientation and temporal frequency.</p>
+<div id="95675597" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rerun model with interaction term</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> format_tables(v1_resp, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp_mdl.fit()</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the predicted receptive field</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>rf_pred_int <span class="op">=</span> res.predict(X).reshape(<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">15</span>)[:,:,<span class="dv">0</span>]</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the residual</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>rf_resid_int <span class="op">=</span> rf_true <span class="op">-</span> rf_pred_int</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">4</span>))</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_true, title<span class="op">=</span><span class="st">'True RF'</span>, ax<span class="op">=</span>axs[<span class="dv">0</span>])</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_pred_int, title<span class="op">=</span><span class="st">'Predicted RF'</span>, ax<span class="op">=</span>axs[<span class="dv">1</span>])</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_resid_int, title<span class="op">=</span><span class="st">'Residual RF'</span>, ax<span class="op">=</span>axs[<span class="dv">2</span>])</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:            spike_count   No. Observations:                  600
+Model:                            GLM   Df Residuals:                      560
+Model Family:                 Poisson   Df Model:                           39
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -1488.8
+Date:                Mon, 13 Jan 2025   Deviance:                       1806.7
+Time:                        12:28:04   Pearson chi2:                 1.96e+03
+No. Iterations:                    24   Pseudo R-squ. (CS):              1.000
+Covariance Type:            nonrobust                                         
+=========================================================================================================================
+                                                            coef    std err          z      P&gt;|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------
+Intercept                                                -2.7081      1.000     -2.708      0.007      -4.668      -0.748
+C(orientation)[T.45.0]                                    2.5649      1.038      2.472      0.013       0.531       4.599
+C(orientation)[T.90.0]                                    6.1549      1.001      6.148      0.000       4.193       8.117
+C(orientation)[T.135.0]                                   2.4849      1.041      2.387      0.017       0.445       4.525
+C(orientation)[T.180.0]                                   1.3863      1.118      1.240      0.215      -0.805       3.578
+C(orientation)[T.225.0]                               -1.272e-13      1.414  -8.99e-14      1.000      -2.772       2.772
+C(orientation)[T.270.0]                                   5.5910      1.002      5.581      0.000       3.627       7.555
+C(orientation)[T.315.0]                                   1.9459      1.069      1.820      0.069      -0.149       4.041
+C(temporal_frequency)[T.2.0]                              0.6931      1.225      0.566      0.571      -1.707       3.094
+C(temporal_frequency)[T.4.0]                            -19.8212   1.22e+04     -0.002      0.999    -2.4e+04    2.39e+04
+C(temporal_frequency)[T.8.0]                              1.6094      1.095      1.469      0.142      -0.538       3.756
+C(temporal_frequency)[T.15.0]                             3.5264      1.015      3.476      0.001       1.538       5.515
+C(orientation)[T.45.0]:C(temporal_frequency)[T.2.0]      -1.4663      1.320     -1.110      0.267      -4.054       1.122
+C(orientation)[T.90.0]:C(temporal_frequency)[T.2.0]      -0.5884      1.226     -0.480      0.631      -2.992       1.815
+C(orientation)[T.135.0]:C(temporal_frequency)[T.2.0]     -1.0986      1.307     -0.841      0.401      -3.660       1.463
+C(orientation)[T.180.0]:C(temporal_frequency)[T.2.0]      0.5596      1.350      0.415      0.678      -2.086       3.205
+C(orientation)[T.225.0]:C(temporal_frequency)[T.2.0]      1.2528      1.626      0.771      0.441      -1.934       4.439
+C(orientation)[T.270.0]:C(temporal_frequency)[T.2.0]     -0.2753      1.227     -0.224      0.822      -2.681       2.130
+C(orientation)[T.315.0]:C(temporal_frequency)[T.2.0]     -0.6931      1.336     -0.519      0.604      -3.312       1.926
+C(orientation)[T.45.0]:C(temporal_frequency)[T.4.0]      19.5588   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.90.0]:C(temporal_frequency)[T.4.0]      20.0912   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.135.0]:C(temporal_frequency)[T.4.0]     19.2822   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.180.0]:C(temporal_frequency)[T.4.0]     19.8212   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.225.0]:C(temporal_frequency)[T.4.0]     21.2075   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.270.0]:C(temporal_frequency)[T.4.0]     20.1410   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.315.0]:C(temporal_frequency)[T.4.0]     20.1779   1.22e+04      0.002      0.999   -2.39e+04     2.4e+04
+C(orientation)[T.45.0]:C(temporal_frequency)[T.8.0]      -1.3412      1.156     -1.160      0.246      -3.606       0.924
+C(orientation)[T.90.0]:C(temporal_frequency)[T.8.0]      -1.3443      1.097     -1.225      0.220      -3.495       0.806
+C(orientation)[T.135.0]:C(temporal_frequency)[T.8.0]     -1.1499      1.156     -0.995      0.320      -3.415       1.115
+C(orientation)[T.180.0]:C(temporal_frequency)[T.8.0]     -1.0498      1.262     -0.832      0.406      -3.523       1.424
+C(orientation)[T.225.0]:C(temporal_frequency)[T.8.0]      0.3365      1.531      0.220      0.826      -2.664       3.336
+C(orientation)[T.270.0]:C(temporal_frequency)[T.8.0]     -1.3311      1.098     -1.212      0.226      -3.484       0.822
+C(orientation)[T.315.0]:C(temporal_frequency)[T.8.0]     -0.9163      1.189     -0.770      0.441      -3.247       1.415
+C(orientation)[T.45.0]:C(temporal_frequency)[T.15.0]     -1.9169      1.059     -1.810      0.070      -3.993       0.159
+C(orientation)[T.90.0]:C(temporal_frequency)[T.15.0]     -3.1814      1.016     -3.130      0.002      -5.174      -1.189
+C(orientation)[T.135.0]:C(temporal_frequency)[T.15.0]    -2.4277      1.068     -2.273      0.023      -4.521      -0.335
+C(orientation)[T.180.0]:C(temporal_frequency)[T.15.0]    -2.2046      1.160     -1.900      0.057      -4.479       0.069
+C(orientation)[T.225.0]:C(temporal_frequency)[T.15.0]     0.5680      1.430      0.397      0.691      -2.236       3.372
+C(orientation)[T.270.0]:C(temporal_frequency)[T.15.0]    -2.9415      1.017     -2.891      0.004      -4.936      -0.947
+C(orientation)[T.315.0]:C(temporal_frequency)[T.15.0]    -1.4118      1.091     -1.294      0.195      -3.549       0.726
+=========================================================================================================================</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-21-output-2.png" width="1135" height="373" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>By including the interaction term, the model now perfectly captures the response of the neuron to the drifting gratings. In fact, it is too perfect. The residuals are on the order of 10^-10 (which is essentially zero). This is a sign that we have overfit the model. We can test this by training on the model on just a subset of data and comparing it with an RF estimated from another subset it has not seen. This procedure is generally referred to as <em>cross-validation</em>. The data we train or fit the model to will be called the <em>training set</em>, while the data it has not seen where we evaluate its performance will be called the <em>test set</em>. The residual calculated on the test set will give us a sense of how well the model generalizes to new data.</p>
+<div id="70acadd6" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># separate data into stratified training and test sets</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>train_inds <span class="op">=</span> np.mod(np.arange(<span class="bu">len</span>(v1_resp)), <span class="dv">15</span>)<span class="op">&lt;</span><span class="dv">12</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>v1_resp_train <span class="op">=</span> v1_resp.iloc[train_inds]</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>v1_resp_test <span class="op">=</span> v1_resp.iloc[<span class="op">~</span>train_inds]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We split the data into two sets. The training set will be 80% of the data, while the test set will be 20%. We use more data for training because the more data the model sees, the better it will be able to learn the underlying relationship between the independent and dependent variables. A 80/20%, also known as a 5-fold cross validation, is a common split ratio.</p>
+<div id="89b32175" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train model</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp_mdl.fit()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># test model</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>y_test, X_test <span class="op">=</span> format_tables(v1_resp_test, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>rf_test_pred <span class="op">=</span> res.predict(X_test).reshape(<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">3</span>)[:,:,<span class="dv">0</span>]</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># true RF from test set</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>v1_rfs_test <span class="op">=</span> v1_resp_test.pivot_table(index<span class="op">=</span>[<span class="st">'orientation'</span>, <span class="st">'temporal_frequency'</span>], values<span class="op">=</span>nrn_ids, aggfunc<span class="op">=</span><span class="st">'mean'</span>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>rf_test_true <span class="op">=</span> v1_rfs_test[<span class="st">'16'</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the residual</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>rf_test_resid <span class="op">=</span> rf_test_true <span class="op">-</span> rf_test_pred</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">4</span>))</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_test_true, title<span class="op">=</span><span class="st">'True RF'</span>, ax<span class="op">=</span>axs[<span class="dv">0</span>])</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_test_pred, title<span class="op">=</span><span class="st">'Predicted RF'</span>, ax<span class="op">=</span>axs[<span class="dv">1</span>])</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>rf_plot(rf_test_resid, title<span class="op">=</span><span class="st">'Residual RF'</span>, ax<span class="op">=</span>axs[<span class="dv">2</span>])</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-23-output-1.png" width="1134" height="373" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Comparing the prediction with the held out test data, we can see that the model performs far worse. For instance, for drifting gratings at 90 degrees and 8 Hz our estimate is off by almost 25 spikes! We could examine the error for each stimulus to get a sense of how poorly the model performs, but it would be more convenient to have a measure that summarizes the error across all stimuli. For GLMs, the most common measure of error is the deviance. The deviance reflects how well the model fits the data by comparing the predicted response to the actual response. The lower the deviance, the better the model fits the data. The deviance is calculated as:</p>
+<p><span class="math display"> D = 2\sum_{i=1}^{n}y_i\log\left(\frac{y_i}{\hat{y}_i}\right) - y_i + \hat{y}_i </span></p>
+<p>Recall from our linear regression lesson, <span class="math inline">y_i</span> is the actual response of the neuron, while <span class="math inline">\hat{y}_i</span> is the predicted response. The deviance is calculated for each data point, and then summed across all data points. Looking at the equation, you can get some intuition for how it gives a lower value for a better fitting model. If <span class="math inline">y_i</span> and <span class="math inline">\hat{y}_i</span> are the same, then the log term will be 0 and the sum of <span class="math inline">y_i</span> and <span class="math inline">\hat{y}_i</span> will also be zero. Adding them together gives zero.</p>
+<div id="105adb3d" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function for calculating deviance</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> deviance(y_true, y_pred):</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    y_pred[y_pred<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> <span class="fl">1e-10</span> <span class="co"># to avoid log(0), which is -inf</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    y_true[y_true<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> <span class="fl">1e-10</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>np.<span class="bu">sum</span>(y_true<span class="op">*</span>np.log(y_true<span class="op">/</span>y_pred) <span class="op">-</span> y_true <span class="op">+</span> y_pred)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the deviance of the model</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>dev_main <span class="op">=</span> deviance(rf_true, rf_pred)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>dev_int <span class="op">=</span> deviance(rf_true, rf_pred_int)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>dev_test <span class="op">=</span> deviance(rf_test_true, rf_test_pred)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Deviance of main model: </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(dev_main))</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Deviance of interaction model: </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(dev_int))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Deviance of interaction model with train/test: </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(dev_test))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Deviance of main model: 21.281874845218248
+Deviance of interaction model: 2.931960808858664e-11
+Deviance of interaction model with train/test: 104.20409893816736</code></pre>
+</div>
+</div>
+<p>There is a story in these deviance scores! The deviance of the interaction model with train/test is higher than both the main effects and interaction models trained and tested on all the data. This is because training and testing on the entire dataset allows the model to fit to most of the variability, whether it is due to a systematic relationship or noise. Fitting the interaction model on just the training data and testing it on the test data caused a massive drop in performance (a higher deviance score). This is because the noise it fit to in the training set was not in the test set. Since the interaction terms seem especially noise sensitive, perhaps the model would perform better if we got rid of the interaction terms. To test this, let’s use a main effects model with the train/test data split.</p>
+<div id="b6a43edf" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train model</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) + C(temporal_frequency)'</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp_mdl.fit()</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># test model</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>y_test, X_test <span class="op">=</span> format_tables(v1_resp_test, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) + C(temporal_frequency)'</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>rf_test_main_pred <span class="op">=</span> res.predict(X_test).reshape(<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">3</span>)[:,:,<span class="dv">0</span>]</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>dev_test_main <span class="op">=</span> deviance(rf_test_true, rf_test_main_pred)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Deviance of interaction vs main model on test set: </span><span class="sc">{}</span><span class="st"> vs </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(dev_test, dev_test_main))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Deviance of interaction vs main model on test set: 104.20409893816736 vs 123.80230520651624</code></pre>
+</div>
+</div>
+<p>When using the train/test approach, the main effects model performed worse than the interaction model. This suggests that the interaction model is capturing some of the underlying relationships in the data that are missed by only considering orientation and temporal frequency as independently contributing to the response of the neuron. However, we saw that the interaction model has a tendency to overfit, so it may be performing worse than is apparent. Is there a way to get the benefits of including all the interaction terms in the model while controlling for overfitting? Yes, if use <em>regularization</em> as part of the fitting process.</p>
+</section>
+</section>
+<section id="regularization" class="level2">
+<h2 class="anchored" data-anchor-id="regularization">Regularization</h2>
+<p>The problem has been that we have so many factors accessible to the interaction model that it can now <em>overfit</em> the data. By overfitting, we mean that the model tries to capture all the variability in the training data. A good example of this phenomenon is fitting a curve with as many parameters as there are data points.</p>
+<p>Imagine we have two variables, <span class="math inline">x</span> and <span class="math inline">y</span>, that are related to each other by the equation <span class="math inline">y=x+\epsilon</span>. Here <span class="math inline">\epsilon</span> is some noise that makes <span class="math inline">x</span> and <span class="math inline">y</span> only partially correlated. We want to predict the value of <code>y</code> given the value of <code>x</code>. There are a host of models that can be used. One is our old friend the line equation, where <span class="math inline">y=b+wx</span>.</p>
+<div id="0d806f58" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create two partially correlated variables</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">47</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.randn(<span class="dv">10</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> np.random.randn(<span class="dv">10</span>)<span class="op">/</span><span class="dv">2</span> <span class="co"># y is partially correlated with x</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_w_fit(x, y, mdl_order<span class="op">=</span><span class="dv">1</span>, ax<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Function to plot data and fit a linear model.</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="co">    x : array</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Array of x values.</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co">    y : array</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="co">        Array of y values.</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="co">    mdl_order : int</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co">        Order of polynomial to fit to data.</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="co">    ax : matplotlib.axes.Axes</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="co">        Axis to plot on.</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> plt.gca()</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    min_x <span class="op">=</span> np.<span class="bu">min</span>(x)<span class="op">-</span><span class="fl">0.5</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    max_x <span class="op">=</span> np.<span class="bu">max</span>(x)<span class="op">+</span><span class="fl">0.5</span></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>    x_samples <span class="op">=</span> np.linspace(min_x,max_x,<span class="dv">100</span>)</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot x vs y</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, y, <span class="st">'k.'</span>, label<span class="op">=</span><span class="st">'Train data'</span>)</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>    y_lim <span class="op">=</span> ax.get_ylim()</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot polynomial fit</span></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_samples, np.poly1d(np.polyfit(x, y, mdl_order))(x_samples), <span class="st">'r'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Fit curve'</span>)</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'x'</span>)</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'y'</span>)</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(y_lim)</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim([min_x, max_x])</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">'x vs y with order </span><span class="sc">{}</span><span class="st"> fit'</span>.<span class="bu">format</span>(mdl_order))</span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x,y)</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-26-output-1.png" width="600" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A line captures the trend, larger values of <span class="math inline">x</span> lead to larger values of <span class="math inline">y</span>, but almost none of the data points lie along the best fit line. The line is a polynomial with order=1. What happens if we increase the order? To do that, we can add additional terms, <span class="math inline">y = b + m_1x + m_2x^2</span> (a quadratic equation), <span class="math inline">y= b + m_1x + m_2x^2 + m_3x^3</span> (cubic equation), and so on.</p>
+<div id="c2688f43" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot x vs y with fits of different orders</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">2</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">5</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">9</span>, ax<span class="op">=</span>ax[<span class="dv">2</span>])</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-27-output-1.png" width="1141" height="372" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we increase the order, the fitted curve gets closer to the data points. If our order is equal to the number of data points, then it passes through each point. This is analogous to our interaction model that was trained and tested on the entire dataset. It could perfectly predict the response to each of the stimuli. However, with the curve fitting case here we can see that between points the curve deviates dramatically. If we generate additional data points using the same rule that generated the original data, <span class="math inline">y=x+\epsilon</span>, we will find that higher order fits are even worse then the lower order ones.</p>
+<div id="15006c22" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate new data using the same process</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>x_new <span class="op">=</span> np.random.randn(<span class="dv">10</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>y_new <span class="op">=</span> x_new <span class="op">+</span> np.random.randn(<span class="dv">10</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot x vs y with fits of different orders</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">2</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(x_new, y_new, <span class="st">'g+'</span>, label<span class="op">=</span><span class="st">'Test data'</span>)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">5</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(x_new, y_new, <span class="st">'g+'</span>)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">9</span>, ax<span class="op">=</span>ax[<span class="dv">2</span>])</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].plot(x_new, y_new, <span class="st">'g+'</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-28-output-1.png" width="1141" height="372" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The higher order models better fit the data points they are trained on (the training data set), but poorly on those data points they are not (green crosses, our test data set). In fact, increasing model order seems to worsen the fit to test data. We can see this by examining how the mean squared error on the test data varies for models of different order.</p>
+<div id="ff816b9a" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ord_list <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">9</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>train_err <span class="op">=</span> np.zeros(ord_list.size)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>test_err <span class="op">=</span> np.zeros(ord_list.size)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fit models of different orders and get train and test errors</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> ord_list:</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    mdl <span class="op">=</span> np.poly1d(np.polyfit(x, y, i))</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    train_err[i] <span class="op">=</span> np.mean((y <span class="op">-</span> mdl(x))<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    test_err[i] <span class="op">=</span> np.mean((y_new <span class="op">-</span> mdl(x_new))<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plot train and test errors</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>plt.plot(ord_list, train_err, color<span class="op">=</span><span class="st">'k'</span>, label<span class="op">=</span><span class="st">'Train'</span>)</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>plt.plot(ord_list, test_err, color<span class="op">=</span><span class="st">'g'</span>, label<span class="op">=</span><span class="st">'Test'</span>)</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Model order'</span>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Mean squared error'</span>)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Train and test errors for models of different orders'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>Text(0.5, 1.0, 'Train and test errors for models of different orders')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-29-output-2.png" width="599" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we increase the model order, the error on the training data keeps decreasing. If we get to a model order of 9 (not plotted), the error drops to 0, which reflects the fact that the curve can now pass through each data point. On the other hand, the error on the test data decreases, then increases. It reaches its minimum at a model of order 1, which reflects the fact that the data was generated by a linear model, <span class="math inline">y=x</span>. As the order increases past 1, the error increases, because the model is now making predictions between the training data points that are deviating from the underlying linear function that generates the data. This is the problem with overfitting, and why it is crucial to use separate training and test data sets to evaluate the performance of decoders.</p>
+<p>With the polynomial fit, it is straightforward to set the model order to minimize error on the test data set. For our interaction model with 40 <span class="math inline">\beta</span> coefficients, and that we do not <em>a priori</em> know which are important, this is not so easy. Regularization is a technique that can help us with this. Regularization works by adding a penalty term to the error function (which we will now call a loss function to fit with the terminology in machine learning) that the model is trying to minimize. This penalty term is a function of the model <span class="math inline">\beta</span> coefficients, and it is designed to discourage the model from increasing their aggregate value. There are two common types of regularization, L1 and L2.</p>
+<section id="l2-and-l1-penalties" class="level3">
+<h3 class="anchored" data-anchor-id="l2-and-l1-penalties">L2 and L1 penalties</h3>
+<p>Regularization adds a term to the loss function that penalizes it for using non-zero <span class="math inline">\beta</span> coefficients. This is referred to as the <em>penalty term</em>. The degree to which we allow this penalty term to influence the loss is set by the <span class="math inline">\lambda</span> parameter. There are different functions, called <em>norms</em>, for measuring the magnitude of the <span class="math inline">\boldsymbol{\beta}</span> vector. If we take the sum of the squared value for each <span class="math inline">\beta</span>, that is referred to as the L2 norm, or <em>ridge regression</em>. This is written as:</p>
+<p><span class="math display"> loss = loss_{fit} + \lambda\sum_{i=0}^{n}\boldsymbol{\beta}_i^2 </span></p>
+<p>The consequence of this is that large <span class="math inline">\beta</span>s shrink to smaller values while still minimizing the <span class="math inline">loss_{fit}</span>. The degree to which one emphasizes minimizing the <span class="math inline">\boldsymbol{\beta}</span> is set by the <span class="math inline">\lambda</span> parameter. If <span class="math inline">\lambda</span> is set to 0, then the equation is the same loss function we have been using normally without regularization. As <span class="math inline">\lambda</span> increases, the penalty becomes more stringent, pushing the individual <span class="math inline">\beta</span> coefficients towards 0.</p>
+<p>How does this affect the loss landscape? We can imagine it as being the summation of two surfaces, one for <span class="math inline">loss_{fit}</span> (which we were calling the error surface or landscape in the last lecture) and another for <span class="math inline">\lambda\sum_{i=0}^{n}\boldsymbol{\beta}_i^2</span>. We can contrive a convex <span class="math inline">loss_{fit}</span>, and then vary the strength of <span class="math inline">\lambda</span>, to see how it distorts it.</p>
+<div id="36cdff85" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create loss surface as quadratic function of two variables</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>b1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>b00, b11 <span class="op">=</span> np.meshgrid(b0, b1)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>loss_fit <span class="op">=</span> (b00<span class="op">-</span><span class="dv">8</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (b11<span class="op">-</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># create L2 penalty surface</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>pp <span class="op">=</span> b00<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> b11<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co"># lambda list</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">10</span>]</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot loss surface</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ax.flatten()</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, lam <span class="kw">in</span> <span class="bu">enumerate</span>(lambdas):</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    curr_loss <span class="op">=</span> loss_fit <span class="op">+</span> lam<span class="op">*</span>pp</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    ax[ind].contourf(b00, b11, curr_loss, levels<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    CS <span class="op">=</span> ax[ind].contour(b00, b11, curr_loss, levels<span class="op">=</span><span class="dv">10</span>, colors<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    ax[ind].plot(<span class="dv">8</span>, <span class="dv">2</span>, <span class="st">'ro'</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    ax[ind].clabel(CS, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>    min_ind <span class="op">=</span> np.argmin(curr_loss)</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    ax[ind].plot(b00.flatten()[min_ind], b11.flatten()[min_ind], <span class="st">'wo'</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    ax[ind].set_title(<span class="st">'$\lambda$ = '</span> <span class="op">+</span> <span class="bu">str</span>(lam))</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>    ax[ind].grid()</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>    ax[ind].set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'Loss surface for different $\lambda$ values with L2 penalty'</span>)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-30-output-1.png" width="538" height="474" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Our contrived loss function has a minimum when <code>b0</code>=8 and <code>b1</code>=2. When the <span class="math inline">\lambda</span> parameter is zero, the overall loss, <span class="math inline">loss</span> (white dot), is equal to <span class="math inline">loss_{fit}</span> (red dot). Increasing <span class="math inline">\lambda</span> starts to shift the minimum of <span class="math inline">loss</span> towards the origin, where <code>b0</code> and <code>b1</code> are equal to 0. The <span class="math inline">\beta</span> coefficient that is stronger is less affected by this, with <code>b1</code> approaching 0 sooner than <code>b0</code>. Note that this approach is gradual. Generally, the coefficients will not precisely reach 0. Thus, the L2 norm <em>shrinks</em> the weights.</p>
+<p>Another norm is to take the sum of the absolute values of the <span class="math inline">\beta</span> coefficients. This is known as the L1 norm, or Least Absolute Shrinkage and Selection Operator (LASSO). This is expressed mathematically as:</p>
+<p><span class="math display"> loss = loss_{fit} + \lambda\sum_{i=0}^{n}|\boldsymbol{\beta}_i| </span></p>
+<p>Because we are not squaring the coefficients, the shape of the penalty is different. Instead of a smooth quadratic curve centered on zero, it will be an upside down pyramid centered on zero.</p>
+<div id="3e0b5dbf" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create L2 penalty surface</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>pp <span class="op">=</span> np.<span class="bu">abs</span>(b00) <span class="op">+</span> np.<span class="bu">abs</span>(b11)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lambda list</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>]</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co"># plot loss surface</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ax.flatten()</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, lam <span class="kw">in</span> <span class="bu">enumerate</span>(lambdas):</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    curr_loss <span class="op">=</span> loss_fit <span class="op">+</span> lam<span class="op">*</span>pp</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    ax[ind].contourf(b00, b11, curr_loss, levels<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    CS <span class="op">=</span> ax[ind].contour(b00, b11, curr_loss, levels<span class="op">=</span><span class="dv">10</span>, colors<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    ax[ind].plot(<span class="dv">8</span>, <span class="dv">2</span>, <span class="st">'ro'</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    ax[ind].clabel(CS, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    min_ind <span class="op">=</span> np.argmin(curr_loss)</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    ax[ind].plot(b00.flatten()[min_ind], b11.flatten()[min_ind], <span class="st">'wo'</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    ax[ind].set_title(<span class="st">'$\lambda$ = '</span> <span class="op">+</span> <span class="bu">str</span>(lam))</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    ax[ind].grid()</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    ax[ind].set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'Loss surface for different $\lambda$ values with L1 penalty'</span>)</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-31-output-1.png" width="538" height="474" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The <span class="math inline">loss</span> landscape is quite different now. As <span class="math inline">\lambda</span> increases, the surface develops edges centered on the major axes of the graph. These drive each coefficient onto the corresponding axis where its value is clamped at zero. It does this first for the smallest coefficient, in this case <code>b1</code>. What this means is that the LASSO is not just shrinking the weights, but also <em>selecting</em> them, by forcing some to 0.</p>
+<p>These are the two principal ways to penalize weights. Since they act on all the weights in a model, we do not have to preselect the features we want the model to train on. At this point you might be wondering, if we know that <code>b0</code> and <code>b1</code> are really contributing to the model, why would we want to shrink them? Aren’t we just making the model worse by regularization? In this case, we know they matter, but the implicit assumption when using regularization with variables of unknown relevance is that most will not contribute and should be at or near zero. Moreover, as covered in the next section, the degree to which we penalize the coefficients will be set in a principled way that allows the data to tell us whether they are important or not. For that, we can fit the model multiple times to different values of <span class="math inline">\lambda</span>, and then check how the model performs on the test data set. The <span class="math inline">\lambda</span> producing the lowest test error would be the one to use.</p>
+</section>
+<section id="regularization-with-statsmodels" class="level3">
+<h3 class="anchored" data-anchor-id="regularization-with-statsmodels">Regularization with statsmodels</h3>
+<p>The <code>GLM</code> class in the <code>statsmodels</code> package has a fit method that incorporates a regularization term. The <code>fit_regularized</code> method allows you to specify the type of regularization, L1 or L2, and the strength of the regularization, <span class="math inline">\lambda</span>. The lambda term is specified by the <code>alpha</code> input argument. Whether you want to use L1 or L2 regularization is specified by the <code>L1_wt</code> input argument. If <code>L1_wt</code> is set to 0, then L2 regularization is used. If it is set to 1, then L1 regularization is used. You can also set it to a value between 0 and 1 to use a combination of L1 and L2 regularization, which is known as <em>elastic net</em> regularization.</p>
+<p>For the example here, we will go with L1 regularization, but feel free to experiment with L2 regularization as well. We will fit the model to a range of <span class="math inline">\lambda</span> values, and then evaluate the model deviance on the test data set. The model with the lowest deviance on the test data set will be the one we use.</p>
+<div id="a5a2d5b8" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify training model</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># test data</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>y_test, X_test <span class="op">=</span> format_tables(v1_resp_test, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model with different lambdas</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> []</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>dev_test <span class="op">=</span> []</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> np.insert(np.geomspace(<span class="fl">1e-5</span>, <span class="fl">1e4</span>, <span class="dv">20</span>),<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> alpha <span class="kw">in</span> lambdas:</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    exp_res <span class="op">=</span> exp_mdl.fit_regularized(alpha<span class="op">=</span>alpha, L1_wt<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    params.append(exp_res.params)</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    dev_test.append(deviance(rf_test_true, exp_res.predict(X_test).reshape(<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">3</span>)[:,:,<span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/drewheadley/anaconda3/envs/regress/lib/python3.10/site-packages/statsmodels/genmod/generalized_linear_model.py:1464: UserWarning: Elastic net fitting did not converge
+  warnings.warn("Elastic net fitting did not converge")</code></pre>
+</div>
+</div>
+<p>Above we first format a training dataset of the response of our V1 neuron and pass it to a <code>GLM</code> object that will implement Poisson regression. Next we format a test dataset that will be used to evaluate the model upon repeated fittings. Last we fit the model to a range of <span class="math inline">\lambda</span> values and evaluate the model on the test data set. For each fitting we save the beta coefficients used by the model (<code>params</code>), and the deviance on the test data set.</p>
+<p>Next we will plot the deviance on the test data set as a function of <span class="math inline">\lambda</span>. This will allow us to see how the model performs as we increase the strength of the regularization penalty.</p>
+<div id="7d975a17" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find lambda with minimum deviance</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>best_fit <span class="op">=</span> np.argmin(dev_test)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot deviance vs lambda</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>ax.plot(lambdas, dev_test)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>ax.scatter(lambdas[best_fit], dev_test[best_fit], color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>ax.set_yscale(<span class="st">'log'</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">'log'</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$\lambda$'</span>)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Deviance'</span>)</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>ax.grid(which<span class="op">=</span><span class="st">'both'</span>)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Deviance vs $\lambda$ for L1 regularized model'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>Text(0.5, 1.0, 'Deviance vs $\\lambda$ for L1 regularized model')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-33-output-2.png" width="591" height="452" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As <span class="math inline">\lambda</span> increases, the deviance on the test data first decreases modestly, and then increases dramatically. The smallest deviance was near the middle of the <span class="math inline">\lambda</span> values we tested. This is a common pattern with regularization. The reason for why the deviance behaved this way is best illustrated using a plot of the <span class="math inline">\beta</span> coefficients as a function of <span class="math inline">\lambda</span>.</p>
+<div id="bbcd4db1" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setup the colors of the coefficient lines so that they reflect the type of factor they are</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> np.array([<span class="st">'r'</span>, <span class="st">'g'</span>, <span class="st">'b'</span>])</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> col_type(X):</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    col_names <span class="op">=</span> X.design_info.column_names</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    col_types <span class="op">=</span> np.zeros(<span class="bu">len</span>(col_names))</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(X.design_info.column_names):</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col <span class="op">==</span> <span class="st">'Intercept'</span>:</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>            col_types[i] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> col.count(<span class="st">':'</span>) <span class="op">==</span> <span class="dv">0</span>: <span class="co"># main effect</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>            col_types[i] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co"># interaction effect</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>            col_types[i] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col_types</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="co"># format for plotting</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>col_type <span class="op">=</span> col_type(X)</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> np.stack(params)</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a><span class="co"># plot each line in params colored based on the type specified by col_type</span></span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(params.shape[<span class="dv">1</span>]):</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    ax.plot(lambdas, params[:,i], color<span class="op">=</span>colors[col_type[i].astype(<span class="bu">int</span>)], alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">'log'</span>)</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>ax.axvline(lambdas[best_fit], color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lambda'</span>)</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Coefficient value'</span>)</span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Coefficient values vs. lambda'</span>)</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>ax.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Regression2_files/figure-html/cell-34-output-1.png" width="587" height="451" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the above graph we have plotted the fitted value for each <span class="math inline">\beta</span> coefficient as a function of <span class="math inline">\lambda</span>. The intercept is the red line, main effects are green, interaction terms are blue, and the dotted black line is the <span class="math inline">\lambda</span> with the best performance. Starting from the left side with the lowest <span class="math inline">\lambda</span> value, we see that initially all <span class="math inline">\beta</span> coefficients are non-zero. Turning up the <span class="math inline">\lambda</span> knob, the coefficients start to collapse. First several of the interaction effects come shooting down to zero. Turning it further the main effects start to shrink. By the time we reach the <span class="math inline">\lambda</span> with the best deviance on the test data set, most of the terms have either been zeroed or shrunk, with the exception of two terms that correspond to the orientation of 90 and 270 degrees (where the neuron responds most vigorously). Increasing <span class="math inline">\lambda</span> further past this point, all the other coefficients latch on to zero. To compensate for their loss, the two remaining ones at the preferred orientations ramp up their values. However, further increases in lambda drive those down too. In response, the intercept started to increase to compensate for the loss of those terms. Ultimately, it too collapses to zero.</p>
+<p>These changes explain the wobbles and cliff in the deviance score as <span class="math inline">\lambda</span> increased. The initial decrease in deviance is probably due to the model being able to ignore the noise in the data. The subsequent waves in it reflect different strategies for capturing the neurons receptive field. Finally, the dramatic upswing in deviance at high <span class="math inline">\lambda</span> is due to the model ignoring the data entirely.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

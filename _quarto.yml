@@ -1,0 +1,24 @@
+project:
+  type: website
+  render:
+    - Regression1.qmd
+    - Regression2.qmd
+  output-dir: docs
+
+website:
+  title: "Regression Notes"
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - Regression1.qmd
+      - Regression2.qmd
+      - about.qmd
+
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
