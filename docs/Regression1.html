@@ -248,8 +248,8 @@ window.Quarto = {
 </header>
 
 
-<p>Today we are going to cover regression with linear models. We will start with the simplest case, just two data points, and work our way up to the general linear model that handles multiple data points and multiple features. Derivations will be shown at each stage to emphasize the mathematical underpinings of these models and their analytical symmetry. To complement this, whenever possible visualizations will be provided to help build intuition about the models and their behavior.</p>
-<div id="00f92df9" class="cell" data-execution_count="1">
+<p>Today we are going to cover regression with linear models. We will start with the simplest case, just two data points, and work our way up to the general linear model that handles multiple data points and multiple features. Derivations will be shown at each stage to emphasize the mathematical underpinnings of these models and their analytical symmetry. To complement this, whenever possible visualizations will be provided to help build intuition about the models and their behavior.</p>
+<div id="d7cb6157" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import python packages we will work with here</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -274,7 +274,7 @@ window.Quarto = {
 <section id="fitting-a-line-exactly-to-two-observations" class="level3">
 <h3 class="anchored" data-anchor-id="fitting-a-line-exactly-to-two-observations">Fitting a line exactly to two observations</h3>
 <p>Given these observations, <span class="math inline">\boldsymbol{x}</span> and <span class="math inline">\boldsymbol{y}</span>, we want to understand how they are related. Their relationship can be visualized by plotting each pair of observations, <span class="math inline">(\boldsymbol{x}_i, \boldsymbol{y}_i)</span>, which we will call a <em>sample</em>, on a graph. Let’s create two fake samples and plot them.</p>
-<div id="bbc263d0" class="cell" data-execution_count="2">
+<div id="9760a87f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate some random observations</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rs.randn(<span class="dv">2</span>,<span class="dv">1</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> rs.randn(<span class="dv">2</span>,<span class="dv">1</span>)</span>
@@ -317,7 +317,7 @@ y-\boldsymbol{\beta}_1\ x &amp;=  \boldsymbol{\beta}_0 \notag \\
 \end{align}
 </span></p>
 <p>Given the slope, we can then solve for the intercept. Let’s do this for our two observations.</p>
-<div id="2f26b2ff" class="cell" data-execution_count="3">
+<div id="02248b4c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># solve for the slope of the line</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>slope <span class="op">=</span> (y[<span class="dv">1</span>]<span class="op">-</span>y[<span class="dv">0</span>])<span class="op">/</span>(x[<span class="dv">1</span>]<span class="op">-</span>x[<span class="dv">0</span>])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -333,7 +333,7 @@ y-\boldsymbol{\beta}_1\ x &amp;=  \boldsymbol{\beta}_0 \notag \\
  [-0.82212133]]</code></pre>
 </div>
 </div>
-<div id="a1c4b19c" class="cell" data-execution_count="4">
+<div id="740ab63a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the fitted line, along with marks for the observations, intercept, and slope</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x_line <span class="op">=</span> np.array([<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>])</span>
@@ -365,7 +365,7 @@ y-\boldsymbol{\beta}_1\ x &amp;=  \boldsymbol{\beta}_0 \notag \\
 <section id="fitting-a-line-to-more-than-two-observations" class="level3">
 <h3 class="anchored" data-anchor-id="fitting-a-line-to-more-than-two-observations">Fitting a line to more than two observations</h3>
 <p>Hopefully, you will be working with more than just two data points. So now we have to think about solving for the best fit line that passes through many data points. With multiple data points we cannot use the same algebraic approach as above. Instead, we create an equation that captures the difference between the observed data points and a proposed line, then try to derive an equation that tells us what to set the <span class="math inline">\boldsymbol{\beta}</span> coefficients to so that its value is minimized. To start, let’s first create some fake data and plot it.</p>
-<div id="22359fae" class="cell" data-execution_count="5">
+<div id="fd185e47" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create fake set of observations with known slope and intercept</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rs.randn(<span class="dv">100</span>,<span class="dv">1</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>x <span class="op">+</span> rs.randn(<span class="dv">100</span>,<span class="dv">1</span>)</span>
@@ -403,7 +403,7 @@ MSE &amp;= \frac{1}{N}\sum_{i=1}^{N}(\boldsymbol{y}_i - (\boldsymbol{\beta}_0 + 
 \end{align}
 </span></p>
 <p>Let’s create a function that calculates the mean squared error between the predicted line and data.</p>
-<div id="6eecf1b6" class="cell" data-execution_count="6">
+<div id="fdc7026f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define MSE function</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> MSE(obs, pred):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean((obs <span class="op">-</span> pred)<span class="op">**</span><span class="dv">2</span>)</span>
@@ -412,7 +412,7 @@ MSE &amp;= \frac{1}{N}\sum_{i=1}^{N}(\boldsymbol{y}_i - (\boldsymbol{\beta}_0 + 
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> beta[<span class="dv">0</span>] <span class="op">+</span> beta[<span class="dv">1</span>]<span class="op">*</span>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s try a few different prospective lines and see how well they fit the data.</p>
-<div id="6ac4dd1a" class="cell" data-execution_count="7">
+<div id="1692807c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># beta coefficients for three different prospective lines</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>beta1 <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>beta2 <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>])</span>
@@ -442,7 +442,7 @@ MSE &amp;= \frac{1}{N}\sum_{i=1}^{N}(\boldsymbol{y}_i - (\boldsymbol{\beta}_0 + 
 </div>
 <p>None of the lines we randomly created are good fits to the data. The first one passes through the data and is the most closely aligned to its slope, but it is still not a good fit. The second line passes through but its slope is going in the opposite direction. And the third line is even worse, and hardly passes through our observations.</p>
 <p>Perhaps we should try to be methodical about finding the best fit line. One way to do that is to systematically vary the intercept and slope of the best fit line and calculate the mean squared error for each combination. We can then find the combination of intercept and slope that minimizes the mean squared error. If we do this as a <em>grid search</em>, stepping through each combination, we can create a plot of how the MSE varies with each combination. This allows us to visualize the error surface and identify its minimum. Let’s do this.</p>
-<div id="d93074d8" class="cell" data-execution_count="8">
+<div id="7e2c9888" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a grid of intercept and slope values</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>intercepts <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>slopes <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
@@ -523,7 +523,7 @@ N\boldsymbol{\beta}_0 &amp;= \sum\boldsymbol{y}_i - \boldsymbol{\beta}_1\sum\bol
 \end{align}
 </span></p>
 <p>Notice how the equation for the intercept resembles the one we found for just two observations (<span class="math inline">\boldsymbol{\beta}_0 = \boldsymbol{y} - \boldsymbol{\beta}_1\boldsymbol{x}</span>). The only difference is that we are now using the mean of the observations, <span class="math inline">\bar{\boldsymbol{y}}</span> and <span class="math inline">\bar{\boldsymbol{x}}</span> (read as ‘x-bar’), instead of the variables representing <span class="math inline">x</span> and <span class="math inline">y</span>. Thought of another way, what this equation is saying is that if you start at the intercept and move in the direction of the slope towards the mean of the <span class="math inline">\boldsymbol{x}</span> values, you will end up at the mean of the <span class="math inline">\boldsymbol{y}</span> values. You can visualize this as so:</p>
-<div id="cf0daf64" class="cell" data-execution_count="9">
+<div id="e5ed82a5" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the observations with lines for the mean of X and mean of Y</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(x, y)</span>
@@ -579,7 +579,7 @@ N\boldsymbol{\beta}_0 &amp;= \sum\boldsymbol{y}_i - \boldsymbol{\beta}_1\sum\bol
 </span></p>
 <p>How do we interpret this equation? The numerator captures the covariance between <span class="math inline">\boldsymbol{x}</span> and <span class="math inline">\boldsymbol{y}</span>. The denominator is the variance of <span class="math inline">\boldsymbol{x}</span>. (Note that because you are dividing the covariance by the variance, the <span class="math inline">1/N</span> term in each of those is canceled out). This means that the slope of the best fit line is the covariance between <span class="math inline">\boldsymbol{x}</span> and <span class="math inline">\boldsymbol{y}</span> divided by the variance of <span class="math inline">\boldsymbol{x}</span>. Put another way, the slope of the best fit line is a measure of how much <span class="math inline">\boldsymbol{y}</span> changes with respect to <span class="math inline">\boldsymbol{x}</span> for a one unit change in <span class="math inline">\boldsymbol{x}</span>. Again, notice the symmetry with our calculation for just two data points, where the slope was the change in the value of <span class="math inline">y</span> over the change in the value of <span class="math inline">x</span>.</p>
 <p>Now that we have equations for the intercept and slope, we can create a function that calculates the beta coefficients of the best fit line.</p>
-<div id="c569dfdf" class="cell" data-execution_count="10">
+<div id="26031cec" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># solves for best fit line with OLS, verbose version</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> OLS_single_verbose(x, y):</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    beta1 <span class="op">=</span> np.<span class="bu">sum</span>((x <span class="op">-</span> x.mean())<span class="op">*</span>(y <span class="op">-</span> y.mean()))<span class="op">/</span>np.<span class="bu">sum</span>((x <span class="op">-</span> x.mean())<span class="op">**</span><span class="dv">2</span>)</span>
@@ -605,7 +605,7 @@ Concise version: intercept=1.0325148699057354, slope=1.9071403792001227</code></
 </div>
 </div>
 <p>Both versions came very close to the true values of intercept and slope. Surpisingly, they differ only slightly in the intercept despite receiving the exact same data. This likely arises from numerical precision issues in the calculations. To check if our hand coded functions are correct, we can use the built-in Numpy function <code>np.polyfit</code> to calculate the beta coefficients. <code>np.polyfit</code> is a Numpy function that takes two variables data and returns the coefficients of a best fit line. It is especially useful because it supports lines with with additional terms, such as quadratic (<code>deg=2</code>) or cubic (<code>deg=3</code>). Here we will just fit a straight line, so we will set <code>deg=1</code>.</p>
-<div id="0a76990d" class="cell" data-execution_count="11">
+<div id="a02d8e1e" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># solves for best fit line with OLS, builtin function version</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> OLS_single_builtin(x, y):</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>   coefs <span class="op">=</span> np.polyfit(x.flatten(), y.flatten(), <span class="dv">1</span>)</span>
@@ -623,7 +623,7 @@ Concise version: intercept=1.0325148699057354, slope=1.9071403792001227</code></
 <section id="multiple-regression-fitting-a-flat-plane" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-regression-fitting-a-flat-plane">Multiple regression: fitting a flat plane</h2>
 <p>So far we have dealt with fitting a line to describe the relationship between <span class="math inline">y</span> and a single factor <span class="math inline">x</span>, known as single regression. Here two measurements were made for each observation (<span class="math inline">y</span> and <span class="math inline">x</span>). This is sufficient if we have one factor we are measuring or manipulating to affect the state of another variable. Often, however, there is more than one factor that affects the state of the dependent variable. In that case, known as <em>multiple regression</em>, we need to estimate how each factor affects the dependent variable. If we have two factors that are linearly affecting the dependent variable, we can fit a plane to the data. This is formulated as <span class="math inline">\boldsymbol{y}_i = \boldsymbol{\beta}_0 + \boldsymbol{\beta}_1\boldsymbol{x}_{1,i} + \boldsymbol{\beta}_2\boldsymbol{x}_{2,i}</span>. Here <span class="math inline">\boldsymbol{x}_1</span> and <span class="math inline">\boldsymbol{x}_2</span> are vectors of length <span class="math inline">N</span> that represent the two factors affecting the dependent variable. <span class="math inline">\boldsymbol{\beta}</span> will be a vector of coefficients that we solve for to describe the relationship between <span class="math inline">\boldsymbol{x}_1</span>, <span class="math inline">\boldsymbol{x}_2</span>, and <span class="math inline">\boldsymbol{y}</span>. This could be visualized as a plane in three dimensions, with the two factors on the x and y axes and the dependent variable on the z axis. For instance:</p>
-<div id="dce3e883" class="cell" data-execution_count="12">
+<div id="c8367bd5" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create simulated surface</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
@@ -692,7 +692,7 @@ MSE &amp;= \frac{1}{N}(\boldsymbol{y} - \boldsymbol{X}\boldsymbol{\beta})^T(\bol
 <p>Viola, there it is. Notice how it is similar to the single regression case. The denominator is a matrix of the sum of squares for each factor (along the diagonal) and the cross sum of squares between factors (off diagonal elements). This captures the scale of each independent variable and how they are covarying with one another. The numerator is a vector that captures the covariation between each independent variable and the dependent variable. This is a generalization of the slope in the single regression case. The form I have written it in above underscores the symmetry between these two equations, but it is more commonly written as: <span class="math inline">\boldsymbol{\beta} = (\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{y}</span>.</p>
 <p>You might be wondering why we are not also solving for the intercept. This is because the intercept is already included in the matrix <span class="math inline">\boldsymbol{X}</span> as a column of ones. This is why the matrix <span class="math inline">\boldsymbol{X}</span> is of size <span class="math inline">N \times (p+1)</span>, with the <span class="math inline">+1</span> for the intercept. This allows us to solve for the intercept and the coefficients of the factors in a single step. Thus, when solving for <span class="math inline">\boldsymbol{\beta}</span>, you should make sure to include the intercept in the matrix <span class="math inline">\boldsymbol{X}</span> as a column of 1s.</p>
 <p>We can now write our own function to calculate the beta coefficients of a multiple regression problem. Let’s give that a try.</p>
-<div id="4acc2322" class="cell" data-execution_count="13">
+<div id="1b079c8c" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># solves for best fit hyperplane with OLS</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> OLS_multiple_verbose(X, y):</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># preallocate space for xtx and xty</span></span>
@@ -738,7 +738,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 </div>
 </div>
 <p>Numpy also has a built-in function for solving for the beta coefficients of a multiple regression problem. This function is <code>np.linalg.lstsq</code>. It takes the matrix of factors and the dependent variable and returns the beta coefficients. Let’s use this function to check if our hand coded function is correct.</p>
-<div id="46a6208b" class="cell" data-execution_count="14">
+<div id="55f8b236" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> np.linalg.lstsq(X, y)[<span class="dv">0</span>]</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Numpy built-in function: '</span>, beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -751,7 +751,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <h3 class="anchored" data-anchor-id="multiple-regression-with-the-statsmodels-package">Multiple regression with the <code>statsmodels</code> package</h3>
 <p>So far we have used Numpy to solve our regression problems. This is fine if we are just solving for the beta coefficients. However, if we want to do more advanced statistical analysis, such as hypothesis testing, confidence intervals, or model comparison, we need to use a more advanced package. One such package is <code>statsmodels</code>. This package is built on top of <code>Numpy</code> and <code>Scipy</code> and provides a more comprehensive set of tools for statistical analysis. Let’s use this package to solve for the beta coefficients of a multiple regression problem.</p>
 <p>In the <code>statsmodels</code> package there is a function, <code>OLS</code>, that takes the dependent variable (<span class="math inline">\boldsymbol{y}</span>) and the matrix of independent variables/factors (<span class="math inline">\boldsymbol{X}</span>) and returns a <code>RegressionResults</code> model object. In the lingo of the <code>statsmodels</code> package, the dependent variable is referred to as the ‘endogenous’ variable, while the independent variable is the ‘exogenous’ variable. Once the <code>OLS</code> model object is created, you fit the beta coefficients by calling its <code>fit</code> method. This returns a results object. The results object contains a lot of information about the model. The beta coefficients are stored in the <code>params</code> attribute.</p>
-<div id="9079c662" class="cell" data-execution_count="15">
+<div id="2b8548b5" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create an OLS model using statsmodels</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>ols_mdl <span class="op">=</span> sm.OLS(y, X)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -772,7 +772,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <section id="continuous-factor" class="level3">
 <h3 class="anchored" data-anchor-id="continuous-factor">Continuous factor</h3>
 <p>Now that we can fit a model with a simple function, we will explore how to design our <span class="math inline">\boldsymbol{X}</span> matrix to model different kinds of experimental situations. Recall that the <span class="math inline">\boldsymbol{X}</span> matrix is a matrix of size <span class="math inline">N \times (p+1)</span>, where <span class="math inline">N</span> is the number of observations and <span class="math inline">p</span> is the number of factors. The first column of the matrix is a column of ones, which represents the intercept. The intercept can be thought of as capturing the mean value of the dependent variable when all the factors are zero. The remaining columns are the factors that affect the dependent variable. In the example data we generated above, the factors were continuous variables. That means they were real numbers that could take on any value. For single regression there was only one factor, while for multiple regression we included three factors. Something I find helpful when thinking about regression problems is to visualize the design matrix. This can help you understand how the factors are affecting the dependent variable. Let’s visualize the design matrix for some of the data we generated above.</p>
-<div id="be53564e" class="cell" data-execution_count="16">
+<div id="d43ad8bc" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_dmat(df, num_rows<span class="op">=</span><span class="dv">10</span>, ax<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -806,7 +806,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <section id="ordinal-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="ordinal-categorical">Ordinal categorical</h3>
 <p>But your independent variables do not need to be continuous. Instead they could be categorical. Categorical variables take on a limited set of values, denoting either states or values (often integers). For instance, a categorical variable could be the amount of reward payout given in a task, with values ranging from 0 to 3. When a categorical variable is composed of numerically ordered items, such as amount of reward, we refer to it as <em>ordinal</em>. We could simulate a categorical variable for reward payout by adding another column to our current design matrix that randomly chooses from those values for each observation.</p>
-<div id="4215d97f" class="cell" data-execution_count="17">
+<div id="67d29d16" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add reward categorical column representing reward payout</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>reward_cat <span class="op">=</span> rs.choice([<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>], size<span class="op">=</span>(<span class="dv">100</span>,<span class="dv">1</span>)) <span class="co"># create a categorical variable</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>dmat[<span class="st">'Rew_Cat'</span>] <span class="op">=</span> reward_cat</span>
@@ -825,7 +825,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <section id="binarydummy-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="binarydummy-categorical">Binary/dummy categorical</h3>
 <p>Specifying a categorical variable as an integer is fine if we think that the relationship between the dependent variable and the categorical independent variable will be monotonic (they increase or decrease together). But this is not always the case. We could imagine the case where two symbols are displayed during reward payout. Either, neither, or both could be displayed on any trial. For that, we need to create <em>dummy variables</em>. A dummy variable is a categorical binary variable that represents the presence or absence of an event. We create a dummy variable for each symbol that is 1 if the symbol is present and 0 if absent. This allows us to capture the effect of each symbol on the dependent variable. Let’s add a dummy variable to our design matrix.</p>
-<div id="9715029a" class="cell" data-execution_count="18">
+<div id="52050b09" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add two dummy variables to the design matrix</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dummies <span class="op">=</span> rs.choice([<span class="dv">0</span>,<span class="dv">1</span>], size<span class="op">=</span>(<span class="dv">100</span>,<span class="dv">2</span>))</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>dmat[[<span class="st">'Dummy1'</span>, <span class="st">'Dummy2'</span>]] <span class="op">=</span> dummies</span>
@@ -844,7 +844,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <section id="one-hot-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="one-hot-categorical">One-hot categorical</h3>
 <p>What if we wanted to encode the reward payout as a dummy variable? This would allows us to model it as a categorical variable that has a nonlinear relationship with the dependent variable. We would want a dummy variable for each possible value of the reward payout. For that we would use <em>one-hot encoding</em>. One-hot encoding is a method of converting a categorical variable into a binary matrix. Each column of the matrix represents a possible value of the categorical variable. The column corresponding to the value of the categorical variable is 1, while all other columns are 0. Note that the number of columns we create is one less than the number of conditions. This is to avoid the problem of <em>multicollinearity</em> between the intercept column and our one-hot encoding columns. We will explain this further later. For now, let’s add a one-hot encoding of the reward payout to our design matrix.</p>
-<div id="50226170" class="cell" data-execution_count="19">
+<div id="36be9087" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># one hot encode the reward payout variable</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>payout_data <span class="op">=</span> dmat[<span class="st">'Rew_Cat'</span>].values</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>payout_onehot <span class="op">=</span> np.zeros((<span class="dv">100</span>, <span class="dv">3</span>))</span>
@@ -867,7 +867,7 @@ Concise version:  [1.02546624 2.07215648 2.87082363 3.93774308]</code></pre>
 <section id="interaction-term" class="level3">
 <h3 class="anchored" data-anchor-id="interaction-term">Interaction term</h3>
 <p>The last kind of variable we consider is an interaction term. This occurs when the effect of one factor on the dependent variable depends on the value of another factor. For instance, the effect of Factor 1 on the dependent variable could depend on the symbols presented. We could model this by adding a columns to the design matrix that are the product of the reward payout and each of the symbols. This would allow us to capture the interaction between Factor 1 and the symbols. Let’s add an interaction term to our design matrix.</p>
-<div id="73481fc5" class="cell" data-execution_count="20">
+<div id="d8a51ca9" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the interaction terms between the categorical reward and the dummy coded symbols</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>int_terms <span class="op">=</span> dmat[<span class="st">'F1'</span>].values[:,<span class="va">None</span>]<span class="op">*</span>dmat[[<span class="st">'Dummy1'</span>, <span class="st">'Dummy2'</span>]].values</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dmat[[<span class="st">'Int1'</span>, <span class="st">'Int2'</span>]] <span class="op">=</span> int_terms</span>
@@ -903,7 +903,7 @@ Effect of multicollinearity on the error landscape
 <div class="callout-body-container callout-body">
 <p>The issue of multicollinearity can seem a bit abstract if you don’t understand how matrix inverses are calculated (e.g.&nbsp;<a href="https://www.cmor-faculty.rice.edu/~zhang/caam335/F14/handouts/gaussian_elimination.pdf">gaussian elimination</a>). To get a geometric or visual intuition for the problem, consider how the error landscape is affected if two factors are highly correlated. In this case, the error landscape will be stretched along the direction of the correlation. This means that the error surface will be very flat in the direction of the correlation and very steep in the orthogonal direction. This can make it difficult for the optimization algorithm to find the minimum of the error surface. This is why multicollinearity can cause the optimization algorithm to fail to converge. We can visualize this by plotting the error surface for a design matrix with two highly correlated factors.</p>
 <p>First we will create a couple functions to help us calculate and visualize the error surface.</p>
-<div id="eb459125" class="cell" data-execution_count="21">
+<div id="22214930" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the loss landscape for a two factor linear model</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mse_landscape(X, y):</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># perform a grid search of the parameters for the regression, just for the two factors</span></span>
@@ -935,7 +935,7 @@ Effect of multicollinearity on the error landscape
 <span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we will create three design matrices. One will have two factors that are strongly positively correlated, the second with those factors lack any correlation, and the third with those factors are strongly negatively correlated.</p>
-<div id="0177019b" class="cell" data-execution_count="22">
+<div id="d6e877e1" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># beta values for our models to examine multicollinearity (intercept, factor1, factor2)</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>beta_mc <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -960,7 +960,7 @@ Effect of multicollinearity on the error landscape
 <span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The correlation between the negatively correlated factors is </span><span class="sc">{:0.2f}</span><span class="st">'</span>.<span class="bu">format</span>(np.corrcoef(Xn.T)[<span class="dv">1</span>,<span class="dv">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The correlation between the positively correlated factors is 0.99
-The correlation between the uncorrelated factors is 0.05
+The correlation between the uncorrelated factors is 0.14
 The correlation between the negatively correlated factors is -0.99</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -971,7 +971,7 @@ The correlation between the negatively correlated factors is -0.99</code></pre>
 </div>
 </div>
 <p>Now that we have our data, we will calculate the error landscape. In addition, to demonstrate how mulitcolinearity can cause instability in estimation of the beta coefficients, we will recalculate the betas for each design matrix multiple times, leaving out one observation each time.</p>
-<div id="58346e39" class="cell" data-execution_count="23">
+<div id="dc2d4cc4" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the MSE landscapes for all data</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>MSEsp, intercepts, factors <span class="op">=</span> mse_landscape(Xp, yp)</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>MSEsu, _, _ <span class="op">=</span> mse_landscape(Xu, yu)</span>
@@ -1014,7 +1014,7 @@ The correlation between the negatively correlated factors is -0.99</code></pre>
 </div>
 </div>
 <p>Let’s now simulate some data using our design matrix.</p>
-<div id="d5c3dbf2" class="cell" data-execution_count="24">
+<div id="e80917ce" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>mdl_spec <span class="op">=</span> [<span class="st">'Intercept'</span>, <span class="st">'F1'</span>, <span class="st">'F2'</span>, <span class="st">'F3'</span>, </span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">'Dummy1'</span>, <span class="st">'Dummy2'</span>, </span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">'Rew_OH1'</span>, <span class="st">'Rew_OH2'</span>, <span class="st">'Rew_OH3'</span>, </span>
@@ -1027,7 +1027,7 @@ The correlation between the negatively correlated factors is -0.99</code></pre>
 <span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> X <span class="op">@</span> beta_true <span class="op">+</span> rs.randn(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now that we have our design matrix and simulated <span class="math inline">\boldsymbol{y}</span>, we can fit a linear model to the data. We will use the <code>OLS</code> function in the <code>statsmodels</code> package to do this.</p>
-<div id="1f06dab6" class="cell" data-execution_count="25">
+<div id="34b8de39" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create linear model and specify the exogenous variable names</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>lm_mdl <span class="op">=</span> sm.OLS(y, X)</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>lm_mdl.exog_names[:] <span class="op">=</span> mdl_spec</span>
@@ -1036,7 +1036,7 @@ The correlation between the negatively correlated factors is -0.99</code></pre>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>lm_results <span class="op">=</span> lm_mdl.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As we did above, let’s compare the true <span class="math inline">\beta</span> coefficients with the <span class="math inline">\beta</span> coefficients we estimated with our model.</p>
-<div id="135ad9a8" class="cell" data-execution_count="26">
+<div id="e36f226d" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print true beta coefficiengs to 2 decimal places</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Factor name: True beta, Estimated beta'</span>)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(beta_true.size):</span>
@@ -1057,7 +1057,7 @@ Int2: 1.00, 1.24</code></pre>
 </div>
 </div>
 <p>Note that they are all close to the true <span class="math inline">\beta</span> values. Since we had a 100 data points, and the noise we added was relatively small, we were able to recover the true <span class="math inline">\beta</span> coefficients with a high degree of accuracy. This is not always the case. If the noise is large or the number of observations is small, the <span class="math inline">\beta</span> coefficients will be estimated less accurately. For instance, if we reduce the number of observations to 15:</p>
-<div id="157e86cd" class="cell" data-execution_count="27">
+<div id="4908ee51" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># restrict model fitting to just 15 observations</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>lm_mdl_sub <span class="op">=</span> sm.OLS(y[:<span class="dv">15</span>], X[:<span class="dv">15</span>])</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>lm_results_sub <span class="op">=</span> lm_mdl_sub.fit()</span>
@@ -1085,7 +1085,7 @@ Int2: 1.00, -0.35</code></pre>
 <section id="summary-table-of-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="summary-table-of-the-model">Summary table of the model</h3>
 <p>After fitting the linear model, we get a <code>results</code> object that has a <code>summary</code> method, which provides a comprehensive summary of the model. This includes the <span class="math inline">\beta</span> coefficients, the standard errors of the coefficients, the t-statistics, the p-values, and the confidence intervals. Here we will return it for the model fitted to all the data and examine each of its major fields in turn.</p>
-<div id="f1e70940" class="cell" data-execution_count="28">
+<div id="6875dd0d" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_results.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
@@ -1093,8 +1093,8 @@ Int2: 1.00, -0.35</code></pre>
 Dep. Variable:                      y   R-squared:                       0.875
 Model:                            OLS   Adj. R-squared:                  0.861
 Method:                 Least Squares   F-statistic:                     62.35
-Date:                Mon, 13 Jan 2025   Prob (F-statistic):           7.58e-36
-Time:                        13:47:51   Log-Likelihood:                -142.24
+Date:                Sun, 02 Mar 2025   Prob (F-statistic):           7.58e-36
+Time:                        16:54:31   Log-Likelihood:                -142.24
 No. Observations:                 100   AIC:                             306.5
 Df Residuals:                      89   BIC:                             335.1
 Df Model:                          10                                         
@@ -1134,7 +1134,7 @@ Notes:
 <section id="visualizing-the-model-fit" class="level3">
 <h3 class="anchored" data-anchor-id="visualizing-the-model-fit">Visualizing the model fit</h3>
 <p>Another way to evaluate the model is to visualize the fit of the model to the data. This can be done by plotting the predicted values of the model against the observed values. If the model fit is good, the predicted values should be close to the observed values. Moreover, the variability in the predicted values should not depend on the observed values. This is known as <em>homoscedasticity</em>. If the variability in the predicted values depends on the observed values, this is called <em>heteroscedasticity</em>. Let’s plot the predicted values of the model against the observed values.</p>
-<div id="e6f0b199" class="cell" data-execution_count="29">
+<div id="183bc201" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get predicted values from the model</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lm_results.predict()</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1155,7 +1155,7 @@ Notes:
 </div>
 </div>
 <p>Our predicted values fall along the equality line (dotted red), indicating that the predicted and observed values tend to be close to each other. This is a good sign that the model is fitting the data well. Indeed, the ‘R-squared’ field in the summary table already told us this. It can be calculated by squaring the correlation coefficient of the the observed <code>y</code> (<span class="math inline">\boldsymbol{y}</span>) with the predicted <code>y_pred</code> (<span class="math inline">\boldsymbol{\hat{y}}</span>).</p>
-<div id="f2c0462e" class="cell" data-execution_count="30">
+<div id="698ac41f" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>r_squared <span class="op">=</span> np.corrcoef(y, y_pred)<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'R-squared: '</span>, r_squared[<span class="dv">0</span>,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1164,7 +1164,7 @@ Notes:
 </div>
 <p>As you can see, same exact value as reported in the summary table.</p>
 <p>Moreover, the variability in the predicted values does not seem to depend on the observed values, indicating the model residuals are homoscedastic. To better visualize this, we can plot the residuals of the model against the predicted values.</p>
-<div id="328d7338" class="cell" data-execution_count="31">
+<div id="7a689501" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>resid <span class="op">=</span> y <span class="op">-</span> y_pred</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the residuals against the predicted values</span></span>
@@ -1185,7 +1185,7 @@ Notes:
 </div>
 </div>
 <p>The residuals do not seem to vary systematically with the predicted values, reinforcing the idea that the residuals are homoscedastic. What might a similar plot look like if the residuals were not homoscedastic? We can simulate this by tweaking the model that generates the data so that one of our variables has a nonlinear relationship with the dependent variable. For this, we will make Factor 2 and 3 have a cubic (<span class="math inline">x^3</span>) relationship with the dependent variable.</p>
-<div id="4e12fa1a" class="cell" data-execution_count="32">
+<div id="05778808" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>X_nonlin <span class="op">=</span> X.copy()</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>X_nonlin[:,<span class="dv">2</span>:<span class="dv">4</span>] <span class="op">=</span> X_nonlin[:,<span class="dv">2</span>:<span class="dv">4</span>]<span class="op">**</span><span class="dv">3</span> <span class="co"># create a non-linear relationship that will be hard to fit</span></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>y_nonlin <span class="op">=</span> X_nonlin <span class="op">@</span> beta_true <span class="op">+</span> rs.randn(<span class="dv">100</span>)</span>

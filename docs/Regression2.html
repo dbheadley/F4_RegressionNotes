@@ -240,8 +240,8 @@ window.Quarto = {
 </header>
 
 
-<p>For this lecture we will graft additional features onto our linear model to allow it to handle a wider array of situations. To start, we will consider the case where the dependent variable is binary, requiring the use of logistic regression. We will then show how logistic regression is just a special case of a more general class of models called generalized linear models. With these we can model a variety of different types of dependent variables, including count data and ordinal data. Lastly, we will explore how to evaluate the performance of these models and control for overfitting by splitting our data into training and testing sets and incorporating regularization.</p>
-<div id="76d88977" class="cell" data-execution_count="1">
+<p>For this lecture we will graft additional features onto our linear model to allow it to handle a wider array of situations. To start, we will consider the case where the dependent variable is binary, requiring the use of logistic regression. We will then show how logistic regression is just a special case of a more general class of models called generalized linear models. With these we can model a variety of different types of dependent variables, including count and reaction time data. Lastly, we will explore how to evaluate the performance of these models and control for overfitting by splitting our data into training and testing sets and incorporating regularization.</p>
+<div id="70e5f36b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> patsy <span class="co"># for creating design matrices</span></span>
@@ -269,7 +269,7 @@ p(T)&amp;=0.5 \\
 <p>One equation that is a useful way to express a conditional probability is the <em>logistic function</em> (also known as the sigmoid function). It has the form:</p>
 <p><span class="math display"> \sigma(x) = \frac{1}{1+e^{-x}} </span></p>
 <p>Let’s code it up and visualize it:</p>
-<div id="800aaaf2" class="cell" data-execution_count="2">
+<div id="50af5854" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a logistic function</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logistic(x):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>x)) </span>
@@ -302,7 +302,7 @@ p(T)&amp;=0.5 \\
 <p>We can pass this into the logistic function to get the probability the event occurring. This is the logistic regression model.</p>
 <p><span class="math display"> \begin{align}
 \hat{y}_i &amp;= \frac{1}{1+e^{-(\boldsymbol{\beta}_0 + \sum_{j=1}^{p}\boldsymbol{\beta}_j\boldsymbol{x}_{j,i})}} \notag \\
-\hat{\boldsymbol{y}} &amp;= \frac{1}{1+e^{-\boldsymbol{\beta} \boldsymbol{x}}} \notag \\
+\hat{\boldsymbol{y}} &amp;= \frac{1}{1+e^{-\boldsymbol{X} \boldsymbol{\beta}}} \notag \\
 \end{align}
 </span></p>
 <p>where <span class="math inline">\boldsymbol{\beta}</span> is a vector of <span class="math inline">\beta</span> coefficients and <span class="math inline">\boldsymbol{x}</span> is a vector of dependent variables.</p>
@@ -322,7 +322,7 @@ p(T)&amp;=0.5 \\
     \end{align}
 </span></p>
 <p>This means that the decision boundary depends on both the intercept and the slope. As you increase the intercept, you move the decision boundary to lower values. Increasing the slope, however, will shift the boundary towards 0. Let’s visualize these relationships.</p>
-<div id="26dc3444" class="cell" data-execution_count="3">
+<div id="3be3c077" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logistic_linear(x, beta):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logistic(np.dot(x, beta))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -357,7 +357,7 @@ p(T)&amp;=0.5 \\
 </div>
 </div>
 <p>One thing in common for the logistic curves plotted above is that as we increase <span class="math inline">x</span> the probability also increases. To make the probability decrease as <span class="math inline">x</span> increases, we set our slope to be negative. If we do this without also changing the sign of our intercept, then the decision boundary will change too (see the equation above). In addition, as we increase the magnitude of the slope, the decision boundary will move closer to 0.</p>
-<div id="cc065c69" class="cell" data-execution_count="4">
+<div id="ccde7c86" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">1</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, var_int <span class="kw">in</span> <span class="bu">enumerate</span>(var_ints):</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> logistic_linear(x, [var_int, <span class="op">-</span><span class="dv">1</span>])</span>
@@ -387,7 +387,7 @@ p(T)&amp;=0.5 \\
 </div>
 </div>
 <p>In general, we can say that the direction of increasing probability is determined by the slope, <span class="math inline">\boldsymbol{\beta}_1</span>, and the location of the decision boundary is determined by the intercept (<span class="math inline">\boldsymbol{\beta}_0</span>) scaled by the slope. In general, this holds true for multiple dimensions as well. The decision boundary is a hyperplane that is perpendicular to the weight vector, <span class="math inline">\boldsymbol{\beta_{1:p}}</span>. The offset of the decision boundary from the origin is determined by the intercept and the slope of the weight vector. This is fairly easy to see in two dimensions, when you have two independent variables.</p>
-<div id="237cca59" class="cell" data-execution_count="5">
+<div id="ae067be6" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_1, x_2 <span class="op">=</span> np.meshgrid(np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>), np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x_1 <span class="op">=</span> x_1.flatten()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x_2 <span class="op">=</span> x_2.flatten()</span>
@@ -427,7 +427,7 @@ p(T)&amp;=0.5 \\
 <section id="logistic-regression-for-binary-classification" class="level3">
 <h3 class="anchored" data-anchor-id="logistic-regression-for-binary-classification">Logistic regression for binary classification</h3>
 <p>Let’s now try to fit a logistic function to some real data. For this example I have compiled a small dataset where the strength of an evoked response potential (ERP) was measured. On some trials, an auditory stimulus was given, driving a strong ERP, while on others no auditory stimulus was presented, resulting in no ERP. The goal is to predict whether an auditory stimulus was given based on the strength of the ERP. We will use logistic regression to do this. First we will load in the data.</p>
-<div id="80094895" class="cell" data-execution_count="6">
+<div id="f29ea78e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> <span class="st">'./data/'</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>logreg_data <span class="op">=</span> json.load(<span class="bu">open</span>(os.path.join(data_dir, <span class="st">'logregdata.json'</span>), <span class="st">'r'</span>))</span>
@@ -458,7 +458,7 @@ y = [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
 </div>
 <p>We have two numpy arrays values. <code>X</code> is the ERP strength measured on each trial, while <code>y</code> is a binary variable indicating whether an auditory stimulus was given. To fit a logistic regression model to this data, we will use the <code>Logit</code> class from the <code>statsmodels</code> package. This function behaves similar to the <code>OLS</code> function used in the last lecture. We will use the <code>fit</code> method to fit the model to the data. The <code>summary</code> method will give us a summary of the model fit.</p>
 <p>It is a good idea to visualize the data before fitting a model to it. This should give you a sense of how well the model will fit the data and whether there are outliers.</p>
-<div id="217fb359" class="cell" data-execution_count="7">
+<div id="21b157d4" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(X, y, c<span class="op">=</span>y, cmap<span class="op">=</span><span class="st">'bwr'</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'ERP strength'</span>)</span>
@@ -475,7 +475,7 @@ y = [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
 </div>
 <p>This graph separates out the data points corresponding to trials when a auditory stimulus was present (in red) or absent (in blue). Here we can see that on average the ERP strength values are higher when a auditory stimulus is present. Trials where the auditory stimulus were given have a <code>y</code> value of 1, while those without the stimulus are 0.</p>
 <p>Now we will use the <code>Logit</code> class to fit a logistic regression model to the data.</p>
-<div id="246c80d0" class="cell" data-execution_count="8">
+<div id="fc178a77" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a pandas dataframe of the data</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'ERP'</span>: X.flatten(), <span class="st">'stim'</span>: y.flatten()})</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -496,8 +496,8 @@ y = [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
 Dep. Variable:                   stim   No. Observations:                   54
 Model:                          Logit   Df Residuals:                       52
 Method:                           MLE   Df Model:                            1
-Date:                Mon, 13 Jan 2025   Pseudo R-squ.:                  0.6503
-Time:                        13:47:57   Log-Likelihood:                -13.036
+Date:                Sun, 02 Mar 2025   Pseudo R-squ.:                  0.6503
+Time:                        16:54:39   Log-Likelihood:                -13.036
 converged:                       True   LL-Null:                       -37.282
 Covariance Type:            nonrobust   LLR p-value:                 3.318e-12
 ==============================================================================
@@ -510,7 +510,7 @@ ERP            0.1332      0.040      3.365      0.001       0.056       0.211
 </div>
 <p>The fitting was successful. It appears that the ERP strength is a significant predictor of whether an auditory stimulus was given. We can see this from the ‘P&gt;|z|’ column in the summary table. There, the p-value for the ERP term is 0.001. We can also find the decision boundary based on the coefficients that the model has learned. ‘Const’ is the value of the intercept, and ‘ERP’ is the slope. The decision boundary is given by <span class="math inline">-\frac{Const}{ERP}=\frac{-4.38}{0.13}=33.69</span>.</p>
 <p>The logistic model <span class="math inline">\boldsymbol{\beta}</span> values can be pulled out of the <code>results</code> object. These are found in the <code>params</code> attribute. The first element in the <code>params</code> array is the intercept (<span class="math inline">\boldsymbol{\beta}_0</span>), while each successive element is the beta for the corresponding factor in the model. Passing these to our logistic function, we can generate the curve that the model has learned, and precisely calculate the decision boundary.</p>
-<div id="47226a1d" class="cell" data-execution_count="9">
+<div id="039f2841" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(X, y, c<span class="op">=</span>y, cmap<span class="op">=</span><span class="st">'bwr'</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ax.plot(np.sort(X), logistic(res.params[<span class="dv">0</span>] <span class="op">+</span> res.params[<span class="dv">1</span>] <span class="op">*</span> np.sort(X)), color<span class="op">=</span><span class="st">'k'</span>)</span>
@@ -520,9 +520,9 @@ ERP            0.1332      0.040      3.365      0.001       0.056       0.211
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'ERP strength vs. auditory stimulus presence'</span>)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_12596/1259642582.py:3: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+<pre><code>/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_2431/1259642582.py:3: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
   ax.plot(np.sort(X), logistic(res.params[0] + res.params[1] * np.sort(X)), color='k')
-/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_12596/1259642582.py:4: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+/var/folders/xr/cvz2q4cs7mn5n78kvjyvkb_00000gn/T/ipykernel_2431/1259642582.py:4: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
   ax.vlines(-res.params[0]/res.params[1], 0, 1, color='k', linestyle=':')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -534,7 +534,7 @@ ERP            0.1332      0.040      3.365      0.001       0.056       0.211
 </div>
 </div>
 <p>You might be wondering why go through all this trouble of creating an entirely new model. Perhaps we could just fit our linear model to this dataset? Let’s try this and see how that turns out.</p>
-<div id="105ea910" class="cell" data-execution_count="10">
+<div id="4d92ba09" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create linear regression model</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lin_mdl <span class="op">=</span> sm.OLS(df[<span class="st">'stim'</span>], sm.add_constant(df[<span class="st">'ERP'</span>]))</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -549,8 +549,8 @@ ERP            0.1332      0.040      3.365      0.001       0.056       0.211
 Dep. Variable:                   stim   R-squared:                       0.566
 Model:                            OLS   Adj. R-squared:                  0.557
 Method:                 Least Squares   F-statistic:                     67.77
-Date:                Mon, 13 Jan 2025   Prob (F-statistic):           5.48e-11
-Time:                        13:47:57   Log-Likelihood:                -16.518
+Date:                Sun, 02 Mar 2025   Prob (F-statistic):           5.48e-11
+Time:                        16:54:39   Log-Likelihood:                -16.518
 No. Observations:                  54   AIC:                             37.04
 Df Residuals:                      52   BIC:                             41.01
 Df Model:                           1                                         
@@ -572,7 +572,7 @@ Notes:
 </div>
 </div>
 <p>Ok, so at first glance things don’t look too bad. The statistically significant factors are the same as with the logistic regression model. However, let’s plot the residuals to see if there is a pattern in the errors.</p>
-<div id="79b21cac" class="cell" data-execution_count="11">
+<div id="6bd71b9f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lin_res.predict(sm.add_constant(df[<span class="st">'ERP'</span>]))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>y_resid <span class="op">=</span> df[<span class="st">'stim'</span>] <span class="op">-</span> y_pred</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -605,11 +605,11 @@ Notes:
 <p>There are many other mean functions beyond the identity and logistic functions. Below is a table of some and there properties:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 25%">
-<col style="width: 16%">
-<col style="width: 25%">
-<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -653,7 +653,7 @@ Notes:
 </table>
 <p>In neuroscience one frequently encounters data that is best described by the Poisson distribution. This distribution is appropriate for count data, which starts at 0 and can go up to positive infinity. To map the output of a linear model onto that distribution (i.e.&nbsp;the inverse link function), one uses the the exponential function. This can be expressed as <span class="math inline">\boldsymbol{y}_i=e^{\boldsymbol{\beta}\boldsymbol{X}_i}</span>. The behavior of the exponential function, <span class="math inline">e^x</span>, is such that it is always positive and increases as <span class="math inline">x</span> increases.</p>
 <p>Let’s examine how this function behaves.</p>
-<div id="4919eded" class="cell" data-execution_count="12">
+<div id="58793a8d" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inverse link function for poisson GLM</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> exp_linear(x, beta):</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.exp(np.dot(x, beta))</span>
@@ -712,7 +712,7 @@ Notes:
 </ol>
 <p>We will examine the responses of neurons in mouse primary visual cortex to these stimuli. The Allen Institute has a publicly available dataset of of such data. The data we will work with was collected while mice viewed a wide variety of stimuli, including many drifting gratings. According to their <a href="https://portal.brain-map.org/explore/circuits/visual-coding-neuropixels">white paper</a>, the drifting gratings all had the same contrast (80%) and spatial frequency (0.04 cycles/degree), but varied in their orientation (0-315 in 45 degree increments), and temporal frequency (1, 2, 4, 8, and 15 Hz).</p>
 <p>I have compiled a small dataset of the spiking responses of neurons to these stimuli from a single mouse.</p>
-<div id="8bd95035" class="cell" data-execution_count="13">
+<div id="20881718" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load v1 response data</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>v1_resp <span class="op">=</span> pd.read_csv(<span class="st">'./data/v1_dg_resp.csv'</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>v1_resp.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -876,11 +876,11 @@ Notes:
 </div>
 </div>
 <p>The data has been imported as a pandas dataframe. Each row corresponds to the presentation of a drifting grating stimulus. The fields ‘orientation’ and ‘temporal_frequency’ describe properties of the drifting grating that was presented. Columns that are numbered correspond to different neurons that were recorded from. Each entry in a column contains the number of spikes that neuron fired during the 2 seconds that a stimulus was presented. You can see from the first 5 entries in the table that the same stimulus was presented multiple times. This allows us to get a sense of the variability in the neuron’s response to the same stimulus. If we want to quickly inspect the mean response of each neuron to the different stimuli, we can use the <code>Dataframe</code>’s <code>pivot_table</code> method to calculate the mean response of each neuron to each type of stimulus.</p>
-<div id="04b22b67" class="cell" data-execution_count="14">
+<div id="7e801d63" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>nrn_ids <span class="op">=</span> [<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">62</span>)] <span class="co"># neuron ids, 0-61</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>v1_rfs <span class="op">=</span> v1_resp.pivot_table(index<span class="op">=</span>[<span class="st">'orientation'</span>, <span class="st">'temporal_frequency'</span>], values<span class="op">=</span>nrn_ids, aggfunc<span class="op">=</span><span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4122b705" class="cell" data-execution_count="15">
+<div id="d34d58ee" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the receptive field of neuron 11</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>example_rf <span class="op">=</span> v1_rfs[<span class="st">'16'</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ori <span class="op">=</span> np.unique(v1_rfs.index.get_level_values(<span class="st">'orientation'</span>))</span>
@@ -924,7 +924,7 @@ Notes:
 </div>
 <p>We have plotted the response of the neuron in three different ways. The first captures the orientation tuning by plotting the mean response of the neuron to each orientation irrespective of the temporal frequency. The second plot does the same but for temporal frequency. Lastly, the third plot illustrates the response as a two dimensional image with color being the spike count, orientation along the x-axis, and temporal frequency along the y-axis. For this example neuron we can see that it responds vigorously to stimuli with an orientation of 90 degrees, and that response increases with the temporal frequency of the drifting grating.</p>
 <p>The neurons in this dataset exhibit a wide variety of responses.</p>
-<div id="abbe3616" class="cell" data-execution_count="16">
+<div id="fdc4fd6e" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot a grid of the receptive fields from all neurons</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">8</span>,<span class="dv">8</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> axs.flatten()</span>
@@ -960,9 +960,9 @@ Formula specification
 <p><code>patsy</code> allows you to specify formulae that can be translated into design matrices. There are many operators and features supported by them, but we will focus on just a few. For a detailed treatment of this, see <a href="https://patsy.readthedocs.io/en/latest/formulas.html">here</a>. Here <code>y</code> is the dependent variable and <code>x1</code> and <code>x2</code> are independent variables.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 54%">
-<col style="width: 31%">
+<col style="width: 22%">
+<col style="width: 50%">
+<col style="width: 27%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1007,7 +1007,7 @@ Formula specification
 </div>
 </div>
 <p>Another formatting detail is that the values in the ‘orientation’ and ‘temporal_frequency’ columns are stored as numeric data types. This means that if we construct a model it will treat these as continuous variables. This would result in the model trying to fit a single slope to the firing rate as a function of either orientation or temporal frequency. However, looking at our neurons, we can see that they respond to orientation and temporal frequency in a non-linear manner. Instead, we should treat these as categorical variables, with a separate <span class="math inline">\beta</span> coefficients for each orientation and temporal frequency. We also want our dependent variable to have a meaningful name, instead of just the unit ID number. We will wrap together the renaming and design matrix creation into a single function.</p>
-<div id="e9454204" class="cell" data-execution_count="17">
+<div id="b90190f3" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a simple function for defining our design matrices</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> format_tables(df, unit_id, fm<span class="op">=</span><span class="st">'spike_count ~ 1'</span>): <span class="co"># default formula is just the spike count with an intercept</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.copy()</span>
@@ -1015,7 +1015,7 @@ Formula specification
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y, X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To start using GLMs, let’s create a simple model that just tries to model the response of the neuron as a function of the orientation and temporal frequencies of the drifting gratings, but doesn’t consider their interaction. For those of you that have taken a statistics class, this is just a main effects model.</p>
-<div id="1069efee" class="cell" data-execution_count="18">
+<div id="38dd1fc1" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the design matrix</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> format_tables(v1_resp, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) + C(temporal_frequency)'</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1035,8 +1035,8 @@ Model:                            GLM   Df Residuals:                      588
 Model Family:                 Poisson   Df Model:                           11
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -1648.5
-Date:                Mon, 13 Jan 2025   Deviance:                       2126.0
-Time:                        13:47:58   Pearson chi2:                 2.56e+03
+Date:                Sun, 02 Mar 2025   Deviance:                       2126.0
+Time:                        16:54:41   Pearson chi2:                 2.56e+03
 No. Iterations:                     7   Pseudo R-squ. (CS):              1.000
 Covariance Type:            nonrobust                                         
 =================================================================================================
@@ -1058,7 +1058,7 @@ C(temporal_frequency)[T.15.0]     0.5987      0.045     13.408      0.000       
 </div>
 </div>
 <p>Examining the summary table, we can see that the model detected a significant relationship between the response of the neuron and the orientation and temporal frequency of drifting gratings. In particular, notice that the <span class="math inline">\beta</span> coefficients for 90 and 270 degrees are the largest, which matches what we saw in the orientation tuning plot above. Note also that the temporal frequency <span class="math inline">\beta</span> coefficients increase, which matches what we saw in the temporal frequency tuning plot. To evaluate the model fit, we can plot the predicted response of the neuron against the actual response.</p>
-<div id="d71ce120" class="cell" data-execution_count="19">
+<div id="20700ca2" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get observed RF</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>rf_true <span class="op">=</span> v1_rfs[<span class="st">'16'</span>].values.reshape(<span class="dv">8</span>,<span class="dv">5</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1089,7 +1089,7 @@ C(temporal_frequency)[T.15.0]     0.5987      0.045     13.408      0.000       
 </div>
 </div>
 <p>Our model seems to be doing a good job of capturing the response of the neuron to the drifting gratings. The predicted response is closely tracking the actual response. However, there are some substantial deviations evident in the residual. In particular, the model is overestimating the response for drifting gratings at 90 degrees and 15 Hz, and usually underestimating the response at lower temporal frequencies. To account for this, we can add interaction terms to our model, to capture the response of the neuron to each combination of orientation and temporal frequency.</p>
-<div id="f2662875" class="cell" data-execution_count="20">
+<div id="d74c9c2d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rerun model with interaction term</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> format_tables(v1_resp, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
@@ -1115,8 +1115,8 @@ Model:                            GLM   Df Residuals:                      560
 Model Family:                 Poisson   Df Model:                           39
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -1488.8
-Date:                Mon, 13 Jan 2025   Deviance:                       1806.7
-Time:                        13:47:58   Pearson chi2:                 1.96e+03
+Date:                Sun, 02 Mar 2025   Deviance:                       1806.7
+Time:                        16:54:41   Pearson chi2:                 1.96e+03
 No. Iterations:                    24   Pseudo R-squ. (CS):              1.000
 Covariance Type:            nonrobust                                         
 =========================================================================================================================
@@ -1173,14 +1173,14 @@ C(orientation)[T.315.0]:C(temporal_frequency)[T.15.0]    -1.4118      1.091     
 </div>
 </div>
 <p>By including the interaction term, the model now perfectly captures the response of the neuron to the drifting gratings. In fact, it is too perfect. The residuals are on the order of 10^-10 (which is essentially zero). This is a sign that we have overfit the model. We can test this by training on the model on just a subset of data and comparing it with an RF estimated from another subset it has not seen. This procedure is generally referred to as <em>cross-validation</em>. The data we train or fit the model to will be called the <em>training set</em>, while the data it has not seen where we evaluate its performance will be called the <em>test set</em>. The residual calculated on the test set will give us a sense of how well the model generalizes to new data.</p>
-<div id="de9bb8ba" class="cell" data-execution_count="21">
+<div id="408aa8f1" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># separate data into stratified training and test sets</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>train_inds <span class="op">=</span> np.mod(np.arange(<span class="bu">len</span>(v1_resp)), <span class="dv">15</span>)<span class="op">&lt;</span><span class="dv">12</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>v1_resp_train <span class="op">=</span> v1_resp.iloc[train_inds]</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>v1_resp_test <span class="op">=</span> v1_resp.iloc[<span class="op">~</span>train_inds]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We split the data into two sets. The training set will be 80% of the data, while the test set will be 20%. We use more data for training because the more data the model sees, the better it will be able to learn the underlying relationship between the independent and dependent variables. A 80/20%, also known as a 5-fold cross validation, is a common split ratio.</p>
-<div id="3577c859" class="cell" data-execution_count="22">
+<div id="e50e1ed2" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train model</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
@@ -1213,7 +1213,7 @@ C(orientation)[T.315.0]:C(temporal_frequency)[T.15.0]    -1.4118      1.091     
 <p>Comparing the prediction with the held out test data, we can see that the model performs far worse. For instance, for drifting gratings at 90 degrees and 8 Hz our estimate is off by almost 25 spikes! We could examine the error for each stimulus to get a sense of how poorly the model performs, but it would be more convenient to have a measure that summarizes the error across all stimuli. For GLMs, the most common measure of error is the deviance. The deviance reflects how well the model fits the data by comparing the predicted response to the actual response. The lower the deviance, the better the model fits the data. The deviance is calculated as:</p>
 <p><span class="math display"> D = 2\sum_{i=1}^{n}y_i\log\left(\frac{y_i}{\hat{y}_i}\right) - y_i + \hat{y}_i </span></p>
 <p>Recall from our linear regression lesson, <span class="math inline">y_i</span> is the actual response of the neuron, while <span class="math inline">\hat{y}_i</span> is the predicted response. The deviance is calculated for each data point, and then summed across all data points. Looking at the equation, you can get some intuition for how it gives a lower value for a better fitting model. If <span class="math inline">y_i</span> and <span class="math inline">\hat{y}_i</span> are the same, then the log term will be 0 and the sum of <span class="math inline">y_i</span> and <span class="math inline">\hat{y}_i</span> will also be zero. Adding them together gives zero.</p>
-<div id="9cca1083" class="cell" data-execution_count="23">
+<div id="4b06151d" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function for calculating deviance</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> deviance(y_true, y_pred):</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    y_pred[y_pred<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> <span class="fl">1e-10</span> <span class="co"># to avoid log(0), which is -inf</span></span>
@@ -1235,7 +1235,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 </div>
 <p>There is a story in these deviance scores! The deviance of the interaction model with train/test is higher than both the main effects and interaction models trained and tested on all the data. This is because training and testing on the entire dataset allows the model to fit to most of the variability, whether it is due to a systematic relationship or noise. Fitting the interaction model on just the training data and testing it on the test data caused a massive drop in performance (a higher deviance score). This is because the noise it fit to in the training set was not in the test set. Since the interaction terms seem especially noise sensitive, perhaps the model would perform better if we got rid of the interaction terms. To test this, let’s use a main effects model with the train/test data split.</p>
-<div id="7664bc8a" class="cell" data-execution_count="24">
+<div id="87fe76c2" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train model</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) + C(temporal_frequency)'</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
@@ -1259,7 +1259,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 <h2 class="anchored" data-anchor-id="regularization">Regularization</h2>
 <p>The problem has been that we have so many factors accessible to the interaction model that it can now <em>overfit</em> the data. By overfitting, we mean that the model tries to capture all the variability in the training data. A good example of this phenomenon is fitting a curve with as many parameters as there are data points.</p>
 <p>Imagine we have two variables, <span class="math inline">x</span> and <span class="math inline">y</span>, that are related to each other by the equation <span class="math inline">y=x+\epsilon</span>. Here <span class="math inline">\epsilon</span> is some noise that makes <span class="math inline">x</span> and <span class="math inline">y</span> only partially correlated. We want to predict the value of <code>y</code> given the value of <code>x</code>. There are a host of models that can be used. One is our old friend the line equation, where <span class="math inline">y=b+wx</span>.</p>
-<div id="aa92940f" class="cell" data-execution_count="25">
+<div id="fe63c560" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create two partially correlated variables</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">47</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.randn(<span class="dv">10</span>)</span>
@@ -1309,7 +1309,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 </div>
 <p>A line captures the trend, larger values of <span class="math inline">x</span> lead to larger values of <span class="math inline">y</span>, but almost none of the data points lie along the best fit line. The line is a polynomial with order=1. What happens if we increase the order? To do that, we can add additional terms, <span class="math inline">y = b + m_1x + m_2x^2</span> (a quadratic equation), <span class="math inline">y= b + m_1x + m_2x^2 + m_3x^3</span> (cubic equation), and so on.</p>
-<div id="2436f5f8" class="cell" data-execution_count="26">
+<div id="c2c76bdd" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot x vs y with fits of different orders</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">2.5</span>))</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>plot_w_fit(x, y, <span class="dv">2</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
@@ -1326,7 +1326,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 </div>
 <p>As we increase the order, the fitted curve gets closer to the data points. If our order is equal to the number of data points, then it passes through each point. This is analogous to our interaction model that was trained and tested on the entire dataset. It could perfectly predict the response to each of the stimuli. However, with the curve fitting case here we can see that between points the curve deviates dramatically. If we generate additional data points using the same rule that generated the original data, <span class="math inline">y=x+\epsilon</span>, we will find that higher order fits are even worse then the lower order ones.</p>
-<div id="bb99c2cd" class="cell" data-execution_count="27">
+<div id="b5017234" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate new data using the same process</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>x_new <span class="op">=</span> np.random.randn(<span class="dv">10</span>)</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>y_new <span class="op">=</span> x_new <span class="op">+</span> np.random.randn(<span class="dv">10</span>)<span class="op">/</span><span class="dv">2</span></span>
@@ -1350,7 +1350,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 </div>
 <p>The higher order models better fit the data points they are trained on (the training data set), but poorly on those data points they are not (green crosses, our test data set). In fact, increasing model order seems to worsen the fit to test data. We can see this by examining how the mean squared error on the test data varies for models of different order.</p>
-<div id="bd7539ab" class="cell" data-execution_count="28">
+<div id="ba37e440" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ord_list <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">9</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>train_err <span class="op">=</span> np.zeros(ord_list.size)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>test_err <span class="op">=</span> np.zeros(ord_list.size)</span>
@@ -1388,7 +1388,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 <p><span class="math display"> loss = loss_{fit} + \lambda\sum_{i=0}^{n}\boldsymbol{\beta}_i^2 </span></p>
 <p>The consequence of this is that large <span class="math inline">\beta</span>s shrink to smaller values while still minimizing the <span class="math inline">loss_{fit}</span>. The degree to which one emphasizes minimizing the <span class="math inline">\boldsymbol{\beta}</span> is set by the <span class="math inline">\lambda</span> parameter. If <span class="math inline">\lambda</span> is set to 0, then the equation is the same loss function we have been using normally without regularization. As <span class="math inline">\lambda</span> increases, the penalty becomes more stringent, pushing the individual <span class="math inline">\beta</span> coefficients towards 0.</p>
 <p>How does this affect the loss landscape? We can imagine it as being the summation of two surfaces, one for <span class="math inline">loss_{fit}</span> (which we were calling the error surface or landscape in the last lecture) and another for <span class="math inline">\lambda\sum_{i=0}^{n}\boldsymbol{\beta}_i^2</span>. We can contrive a convex <span class="math inline">loss_{fit}</span>, and then vary the strength of <span class="math inline">\lambda</span>, to see how it distorts it.</p>
-<div id="034d161b" class="cell" data-execution_count="29">
+<div id="d67559c4" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create loss surface as quadratic function of two variables</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>b1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
@@ -1429,7 +1429,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 <p>Another norm is to take the sum of the absolute values of the <span class="math inline">\beta</span> coefficients. This is known as the L1 norm, or Least Absolute Shrinkage and Selection Operator (LASSO). This is expressed mathematically as:</p>
 <p><span class="math display"> loss = loss_{fit} + \lambda\sum_{i=0}^{n}|\boldsymbol{\beta}_i| </span></p>
 <p>Because we are not squaring the coefficients, the shape of the penalty is different. Instead of a smooth quadratic curve centered on zero, it will be an upside down pyramid centered on zero.</p>
-<div id="a69ca01a" class="cell" data-execution_count="30">
+<div id="9bb14053" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create L2 penalty surface</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>pp <span class="op">=</span> np.<span class="bu">abs</span>(b00) <span class="op">+</span> np.<span class="bu">abs</span>(b11)</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1467,7 +1467,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 <h3 class="anchored" data-anchor-id="regularization-with-statsmodels">Regularization with statsmodels</h3>
 <p>The <code>GLM</code> class in the <code>statsmodels</code> package has a fit method that incorporates a regularization term. The <code>fit_regularized</code> method allows you to specify the type of regularization, L1 or L2, and the strength of the regularization, <span class="math inline">\lambda</span>. The lambda term is specified by the <code>alpha</code> input argument. Whether you want to use L1 or L2 regularization is specified by the <code>L1_wt</code> input argument. If <code>L1_wt</code> is set to 0, then L2 regularization is used. If it is set to 1, then L1 regularization is used. You can also set it to a value between 0 and 1 to use a combination of L1 and L2 regularization, which is known as <em>elastic net</em> regularization.</p>
 <p>For the example here, we will go with L1 regularization, but feel free to experiment with L2 regularization as well. We will fit the model to a range of <span class="math inline">\lambda</span> values, and then evaluate the model deviance on the test data set. The model with the lowest deviance on the test data set will be the one we use.</p>
-<div id="626696c6" class="cell" data-execution_count="31">
+<div id="49c293a0" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify training model</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>y_train, X_train <span class="op">=</span> format_tables(v1_resp_train, <span class="st">'16'</span>, fm<span class="op">=</span><span class="st">'spike_count ~ C(orientation) * C(temporal_frequency)'</span>)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>exp_mdl <span class="op">=</span> sm.GLM(y_train, X_train, family<span class="op">=</span>sm.families.Poisson())</span>
@@ -1490,7 +1490,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 <p>Above we first format a training dataset of the response of our V1 neuron and pass it to a <code>GLM</code> object that will implement Poisson regression. Next we format a test dataset that will be used to evaluate the model upon repeated fittings. Last we fit the model to a range of <span class="math inline">\lambda</span> values and evaluate the model on the test data set. For each fitting we save the beta coefficients used by the model (<code>params</code>), and the deviance on the test data set.</p>
 <p>Next we will plot the deviance on the test data set as a function of <span class="math inline">\lambda</span>. This will allow us to see how the model performs as we increase the strength of the regularization penalty.</p>
-<div id="4f1ff199" class="cell" data-execution_count="32">
+<div id="f508c8b8" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find lambda with minimum deviance</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>best_fit <span class="op">=</span> np.argmin(dev_test)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1516,7 +1516,7 @@ Deviance of interaction model with train/test: 104.20409893816736</code></pre>
 </div>
 </div>
 <p>As <span class="math inline">\lambda</span> increases, the deviance on the test data first decreases modestly, and then increases dramatically. The smallest deviance was near the middle of the <span class="math inline">\lambda</span> values we tested. This is a common pattern with regularization. The reason for why the deviance behaved this way is best illustrated using a plot of the <span class="math inline">\beta</span> coefficients as a function of <span class="math inline">\lambda</span>.</p>
-<div id="cf822c69" class="cell" data-execution_count="33">
+<div id="341f5943" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setup the colors of the coefficient lines so that they reflect the type of factor they are</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> np.array([<span class="st">'r'</span>, <span class="st">'g'</span>, <span class="st">'b'</span>])</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> col_type(X):</span>

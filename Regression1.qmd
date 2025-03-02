@@ -9,7 +9,7 @@ format:
     css: styles.css
 ---
 
-Today we are going to cover regression with linear models. We will start with the simplest case, just two data points, and work our way up to the general linear model that handles multiple data points and multiple features. Derivations will be shown at each stage to emphasize the mathematical underpinings of these models and their analytical symmetry. To complement this, whenever possible visualizations will be provided to help build intuition about the models and their behavior.
+Today we are going to cover regression with linear models. We will start with the simplest case, just two data points, and work our way up to the general linear model that handles multiple data points and multiple features. Derivations will be shown at each stage to emphasize the mathematical underpinnings of these models and their analytical symmetry. To complement this, whenever possible visualizations will be provided to help build intuition about the models and their behavior.
 
 ```{python}
 # import python packages we will work with here

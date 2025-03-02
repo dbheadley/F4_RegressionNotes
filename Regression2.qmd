@@ -9,7 +9,7 @@ format:
     css: styles.css
 ---
 
-For this lecture we will graft additional features onto our linear model to allow it to handle a wider array of situations. To start, we will consider the case where the dependent variable is binary, requiring the use of logistic regression. We will then show how logistic regression is just a special case of a more general class of models called generalized linear models. With these we can model a variety of different types of dependent variables, including count data and ordinal data. Lastly, we will explore how to evaluate the performance of these models and control for overfitting by splitting our data into training and testing sets and incorporating regularization.
+For this lecture we will graft additional features onto our linear model to allow it to handle a wider array of situations. To start, we will consider the case where the dependent variable is binary, requiring the use of logistic regression. We will then show how logistic regression is just a special case of a more general class of models called generalized linear models. With these we can model a variety of different types of dependent variables, including count and reaction time data. Lastly, we will explore how to evaluate the performance of these models and control for overfitting by splitting our data into training and testing sets and incorporating regularization.
 
 ```{python}
 import os
@@ -77,7 +77,7 @@ We can pass this into the logistic function to get the probability the event occ
 
 $$ \begin{align}
 \hat{y}_i &= \frac{1}{1+e^{-(\boldsymbol{\beta}_0 + \sum_{j=1}^{p}\boldsymbol{\beta}_j\boldsymbol{x}_{j,i})}} \notag \\
-\hat{\boldsymbol{y}} &= \frac{1}{1+e^{-\boldsymbol{\beta} \boldsymbol{x}}} \notag \\
+\hat{\boldsymbol{y}} &= \frac{1}{1+e^{-\boldsymbol{X} \boldsymbol{\beta}}} \notag \\
 \end{align}
 $$
 
@@ -300,7 +300,7 @@ In general, a GLM has three components:
 There are many other mean functions beyond the identity and logistic functions. Below is a table of some and there properties:
 
 | Distribution | Link function | Inverse of the link function | Properties | Neuroscientific applications |
-|------------|------------------|------------|------------------|------------|
+|---------------|---------------|---------------|---------------|---------------|
 | Normal | $g(\mu)=\mu$ | $f(y) = y$ | Continuous, Unbounded | Relating BOLD signal to task variables |
 | Poisson | $g(\mu)=\log(\mu)$ | $f(y) = e^y$ | Count data, positive | Spike counts |
 | Binomial | $g(\mu)=\log(\frac{\mu}{1-\mu})$ | $f(y) = \frac{1}{1+e^{-y}}$ | Binary data | Go/No-go decisions |
@@ -444,7 +444,7 @@ There is one extra complication here, though. Unlike the linear model we fit usi
 `patsy` allows you to specify formulae that can be translated into design matrices. There are many operators and features supported by them, but we will focus on just a few. For a detailed treatment of this, see [here](https://patsy.readthedocs.io/en/latest/formulas.html). Here `y` is the dependent variable and `x1` and `x2` are independent variables.
 
 | Operator | Description | Example |
-|----------|----------------------------------------|-----------------------|
+|----------------|------------------------------------|--------------------|
 | `~` | Separates the dependent variable from the independent variables. | `y ~ x1 + x2` |
 | `+` | Adds a term to the model. | `y ~ x1 + x2` |
 | `*` | Includes the interaction between variables and their main effects. | `y ~ x1 * x2` |
