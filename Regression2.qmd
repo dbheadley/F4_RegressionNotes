@@ -376,7 +376,8 @@ The data has been imported as a pandas dataframe. Each row corresponds to the pr
 
 ```{python}
 nrn_ids = [str(x) for x in range(62)] # neuron ids, 0-61
-v1_rfs = v1_resp.pivot_table(index=['orientation', 'temporal_frequency'], values=nrn_ids, aggfunc='mean')
+v1_rfs = v1_resp.groupby(['orientation', 'temporal_frequency'])[nrn_ids].mean()
+v1_rfs[:10]
 ```
 
 ```{python}
@@ -870,4 +871,4 @@ ax.grid()
 
 In the above graph we have plotted the fitted value for each $\beta$ coefficient as a function of $\lambda$. The intercept is the red line, main effects are green, interaction terms are blue, and the dotted black line is the $\lambda$ with the best performance. Starting from the left side with the lowest $\lambda$ value, we see that initially all $\beta$ coefficients are non-zero. Turning up the $\lambda$ knob, the coefficients start to collapse. First several of the interaction effects come shooting down to zero. Turning it further the main effects start to shrink. By the time we reach the $\lambda$ with the best deviance on the test data set, most of the terms have either been zeroed or shrunk, with the exception of two terms that correspond to the orientation of 90 and 270 degrees (where the neuron responds most vigorously). Increasing $\lambda$ further past this point, all the other coefficients latch on to zero. To compensate for their loss, the two remaining ones at the preferred orientations ramp up their values. However, further increases in lambda drive those down too. In response, the intercept started to increase to compensate for the loss of those terms. Ultimately, it too collapses to zero.
 
-These changes explain the wobbles and cliff in the deviance score as $\lambda$ increased. The initial decrease in deviance is probably due to the model being able to ignore the noise in the data. The subsequent waves in it reflect different strategies for capturing the neurons receptive field. Finally, the dramatic upswing in deviance at high $\lambda$ is due to the model ignoring the data entirely.
+These changes explain the wobbles and cliff in the deviance score as $\lambda$ increased. The initial decrease in deviance is probably due to the model being able to ignore the noise in the data. The subsequent waves in it reflect different strategies for capturing the neurons receptive field. Finally, the dramatic upswing in deviance at high $\lambda$ is due to the model ignoring the data entirely.              
